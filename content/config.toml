@@ -1,0 +1,49 @@
+# Reglas generales del juego. Puedes tocar estos números sin programar.
+
+[game]
+max_level = 50          # nivel máximo
+starting_points = 5     # puntos de atributo libres al crear el personaje
+points_per_level = 3    # puntos de atributo que se ganan al subir de nivel
+
+[xp]
+# XP necesaria para pasar del nivel N al N+1:  base * N ^ exponent
+base = 100
+exponent = 1.5
+
+[names]
+min_length = 3
+max_length = 20
+
+[expeditions]
+max_accumulation_hours = 8   # las expediciones dejan de acumular tras estas horas
+over_level_penalty = 0.10    # -10 % de XP por cada nivel por encima del recomendado
+min_xp_factor = 0.2          # la XP nunca baja de este porcentaje
+max_rounds = 30              # rondas máximas por combate (si no, cuenta como derrota)
+
+[items]
+stat_variance = 0.10     # cada objeto que se suelta varía ±10 % sobre sus estadísticas base
+inventory_cap = 50       # si el inventario está lleno, los objetos nuevos se venden solos
+drop_level_margin = 4    # solo se sueltan objetos con nivel requerido <= nivel recomendado + este margen
+
+# Pesos de rareza al soltarse un objeto (enemigos normales y fuertes/élite)
+[loot.normal]
+common = 70
+uncommon = 24
+rare = 5.5
+epic = 0.5
+legendary = 0
+
+[loot.elite]
+common = 30
+uncommon = 40
+rare = 24
+epic = 5
+legendary = 1
+
+# Oro al vender un objeto, según rareza
+[sell]
+common = 8
+uncommon = 25
+rare = 80
+epic = 250
+legendary = 800

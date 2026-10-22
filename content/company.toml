@@ -1,0 +1,22 @@
+# Mejoras de la sede de la compañía. Benefician a TODOS los miembros.
+# Los costes salen del almacén compartido ("gold" = oro, o el id de un material).
+# Cada nivel indica el bonus TOTAL (no se suma al anterior).
+
+[armeria]
+name = "Armería"
+description = "Mejores armas y herramientas para todos: más XP y oro en las expediciones."
+
+[[armeria.levels]]
+xp_bonus = 0.03
+gold_bonus = 0.03
+cost = { gold = 600, hueso_astillado = 20, ectoplasma = 10 }
+
+[[armeria.levels]]
+xp_bonus = 0.06
+gold_bonus = 0.06
+cost = { gold = 2500, fragmento_oscuro = 20, sello_del_sepulcro = 3 }
+
+[[armeria.levels]]
+xp_bonus = 0.10
+gold_bonus = 0.10
+cost = { gold = 8000, ceniza_maldita = 30, sello_del_sepulcro = 8 }

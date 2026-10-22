@@ -1,0 +1,77 @@
+# Expediciones. 'risk' es solo texto informativo; el riesgo real lo marcan los enemigos de cada reserva.
+# item_chance: probabilidad de objeto por enemigo normal; elite_item_chance: por élite.
+# loot_quality: >1 favorece rarezas altas.
+# encounters_per_hour: encuentros que se acumulan por hora. Pesos: más peso = aparece más.
+
+[cripta]
+name = "Cripta Olvidada"
+description = "Un laberinto de nichos y huesos bajo una iglesia en ruinas. Los muertos aún se mueven, pero sin demasiada convicción."
+risk = "seguro"
+min_level = 1
+recommended_level = 1
+encounters_per_hour = 4
+item_chance = 0.06
+elite_item_chance = 0.0
+loot_quality = 0.8
+enemies = [
+  { enemy = "cripta_bruto", weight = 20 },
+  { enemy = "cripta_ligero", weight = 20 },
+  { enemy = "cripta_espectro", weight = 20 },
+]
+
+[catacumbas]
+name = "Catacumbas Inundadas"
+description = "Galerías anegadas donde algo vigila desde el agua negra. Más peligrosas, pero generosas con quien sabe moverse."
+risk = "equilibrado"
+min_level = 4
+recommended_level = 4
+encounters_per_hour = 4
+item_chance = 0.07
+elite_item_chance = 0.35
+loot_quality = 1.0
+enemies = [
+  { enemy = "catacumbas_bruto", weight = 20 },
+  { enemy = "catacumbas_ligero", weight = 20 },
+  { enemy = "catacumbas_espectro", weight = 20 },
+  { enemy = "catacumbas_bruto_elite", weight = 1 },
+  { enemy = "catacumbas_ligero_elite", weight = 1 },
+  { enemy = "catacumbas_espectro_elite", weight = 1 },
+]
+
+[abismo]
+name = "Fosa del Abismo"
+description = "Una grieta en la tierra de la que sube un susurro. Lo que vive abajo paga bien… a quien vuelve."
+risk = "arriesgado"
+min_level = 4
+recommended_level = 4
+encounters_per_hour = 4
+item_chance = 0.07
+elite_item_chance = 0.45
+loot_quality = 1.6
+enemies = [
+  { enemy = "abismo_bruto", weight = 20 },
+  { enemy = "abismo_ligero", weight = 20 },
+  { enemy = "abismo_espectro", weight = 20 },
+  { enemy = "abismo_bruto_elite", weight = 2 },
+  { enemy = "abismo_ligero_elite", weight = 2 },
+  { enemy = "abismo_espectro_elite", weight = 2 },
+]
+
+[paramo]
+name = "Páramo de Ceniza"
+description = "Una llanura calcinada por un ritual que nadie recuerda. Cada paso levanta polvo de huesos."
+risk = "equilibrado"
+min_level = 10
+recommended_level = 10
+encounters_per_hour = 4
+item_chance = 0.08
+elite_item_chance = 0.4
+loot_quality = 1.0
+enemies = [
+  { enemy = "paramo_bruto", weight = 20 },
+  { enemy = "paramo_ligero", weight = 20 },
+  { enemy = "paramo_espectro", weight = 20 },
+  { enemy = "paramo_bruto_elite", weight = 1 },
+  { enemy = "paramo_ligero_elite", weight = 1 },
+  { enemy = "paramo_espectro_elite", weight = 1 },
+]

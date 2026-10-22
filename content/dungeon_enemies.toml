@@ -1,0 +1,42 @@
+# Enemigos de mazmorra. Sus números son RELATIVOS al grupo que entra:
+#  hp_k       = vida, en "rondas de daño de un héroe medio" (daño medido, con habilidades)
+#  dmg_frac   = daño por golpe, como fracción de la vida media del grupo
+#  armor_frac = armadura, como fracción del poder medio del grupo
+# Así el combate dura parecido con 2, 3 o 4 jugadores y a cualquier nivel.
+
+[esqueleto_osario]
+name = "Esqueleto del osario"
+hp_k = 1.65
+dmg_frac = 0.14
+armor_frac = 0.35
+damage_type = "physical"
+
+[necrofago_ciego]
+name = "Necrófago ciego"
+hp_k = 1.2
+dmg_frac = 0.18
+armor_frac = 0.15
+damage_type = "physical"
+
+[susurrante]
+name = "Susurrante"
+hp_k = 1.35
+dmg_frac = 0.16
+armor_frac = 0.20
+damage_type = "magic"
+
+[capitan_osario]
+name = "Capitán del osario"
+hp_k = 3.75
+dmg_frac = 0.20
+armor_frac = 0.40
+damage_type = "physical"
+elite = true
+
+[rey_hueco]
+name = "El Rey Hueco"
+hp_k = 0.75
+dmg_frac = 0.2
+armor_frac = 0.35
+damage_type = "physical"
+elite = true

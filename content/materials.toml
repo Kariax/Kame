@@ -1,0 +1,21 @@
+# Materiales que pueden soltar los enemigos. Servirán para la compañía y la fabricación.
+
+[hueso_astillado]
+name = "Hueso astillado"
+description = "Restos de los que ya no descansan."
+
+[ectoplasma]
+name = "Ectoplasma"
+description = "Residuo frío y viscoso de algo que fue alguien."
+
+[fragmento_oscuro]
+name = "Fragmento oscuro"
+description = "Esquirla que susurra cuando nadie la mira."
+
+[ceniza_maldita]
+name = "Ceniza maldita"
+description = "Polvo de tierras quemadas por rituales olvidados."
+
+[sello_del_sepulcro]
+name = "Sello del sepulcro"
+description = "Sello de cera negra que solo sueltan los jefes de las mazmorras."

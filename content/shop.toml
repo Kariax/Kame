@@ -1,0 +1,25 @@
+# Tienda del mercader. El oro sale del juego aquí (y en las donaciones a la compañía).
+#
+# Equipo del día: la oferta se renueva cada día (00:00 UTC) y es la MISMA para todos.
+# Cada jugador puede comprar cada oferta una vez al día (no hay competencia por existencias).
+# Solo se vende equipo básico: lo raro, épico y legendario hay que ganarlo en las aventuras.
+# Los precios deben ser mayores que el precio de venta (si no, se podría ganar oro comprando y vendiendo).
+
+[stock]
+rarities = ["common", "uncommon"]
+offers_per_slot = 2      # ofertas por ranura y día (12 en total con 6 ranuras)
+
+[prices]
+common = 40
+uncommon = 130
+
+# Reiniciar atributos: devuelve los puntos gastados para repartirlos de nuevo.
+[respec]
+free = 1                 # reinicios gratis por personaje
+base_cost = 100
+cost_per_level = 40      # coste = base + por_nivel * nivel
+
+# Mochila: más huecos de inventario.
+[bag]
+slots_per_upgrade = 10
+prices = [500, 1000, 2000, 4000]   # cada compra sube un nivel; el último precio es el de la última ampliación

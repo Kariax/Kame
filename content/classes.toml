@@ -1,0 +1,47 @@
+# Clases jugables. Para añadir una clase nueva, copia un bloque y cambia los datos.
+# Los cinco atributos deben estar siempre presentes.
+
+[guerrero]
+name = "Guerrero"
+description = "Caballero sin bandera que sobrevivió a la última guerra. Resiste lo que mataría a otros y planta cara a la oscuridad."
+primary = ["fuerza", "vitalidad"]
+[guerrero.basic_attack]
+damage_type = "physical"
+power_multiplier = 1.15
+crit_multiplier = 1.5
+[guerrero.attributes]
+fuerza = 8
+inteligencia = 3
+vitalidad = 8
+destreza = 4
+suerte = 3
+
+[mago]
+name = "Mago"
+description = "Estudioso de saberes prohibidos. Su magia quema, hiela y corrompe, pero su carne es frágil."
+primary = ["inteligencia", "vitalidad"]
+[mago.basic_attack]
+damage_type = "magic"
+power_multiplier = 1.45
+crit_multiplier = 1.5
+[mago.attributes]
+fuerza = 3
+inteligencia = 9
+vitalidad = 4
+destreza = 5
+suerte = 5
+
+[picaro]
+name = "Pícaro"
+description = "Sombra de callejones y criptas. Golpea donde más duele y siempre sabe dónde hay algo que robar."
+primary = ["destreza", "suerte"]
+[picaro.basic_attack]
+damage_type = "physical"
+power_multiplier = 1.45
+crit_multiplier = 2.0
+[picaro.attributes]
+fuerza = 4
+inteligencia = 3
+vitalidad = 5
+destreza = 9
+suerte = 5

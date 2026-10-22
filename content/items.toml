@@ -1,0 +1,530 @@
+# Objetos. Plantillas con estadísticas base y efectos. Al soltarse, cada instancia varía ±10 %.
+# Los números están escritos a mano en este archivo: puedes ajustarlos uno a uno.
+# Estadísticas: fuerza, inteligencia, vitalidad, destreza, suerte (atributos) y
+# max_hp, physical_power, magic_power, defense, crit_chance, loot_bonus (planas).
+# Efectos: crit_damage, skill_haste, skill_power, lifesteal, thorns, elite_damage,
+# armor_pen, second_wind, empower (con skill), item_find.
+
+[maza_de_hueso]
+name = "Maza de hueso"
+description = "Pesado y fiable."
+slot = "weapon"
+rarity = "common"
+min_level = 1
+flavor = "bruto"
+stats = { max_hp = 3, physical_power = 1 }
+
+[baston_carcomido]
+name = "Bastón carcomido"
+description = "Vibra con una energía fría."
+slot = "weapon"
+rarity = "common"
+min_level = 1
+flavor = "arcano"
+stats = { inteligencia = 1, magic_power = 1, max_hp = 3 }
+
+[daga_mellada]
+name = "Daga mellada"
+description = "Ligero y silencioso."
+slot = "weapon"
+rarity = "common"
+min_level = 1
+flavor = "sigilo"
+stats = { destreza = 1, crit_chance = 0.3, physical_power = 1 }
+
+[hacha_del_osario]
+name = "Hacha del osario"
+description = "Pesado y fiable."
+slot = "weapon"
+rarity = "uncommon"
+min_level = 3
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, defense = 1, max_hp = 4, physical_power = 2 }
+
+[cetro_de_ceniza]
+name = "Cetro de ceniza"
+description = "Vibra con una energía fría."
+slot = "weapon"
+rarity = "uncommon"
+min_level = 3
+flavor = "arcano"
+stats = { inteligencia = 1, vitalidad = 1, magic_power = 2, max_hp = 4 }
+
+[estilete_envenenado]
+name = "Estilete envenenado"
+description = "Ligero y silencioso."
+slot = "weapon"
+rarity = "uncommon"
+min_level = 3
+flavor = "sigilo"
+stats = { destreza = 1, crit_chance = 0.6, physical_power = 2, loot_bonus = 0.4 }
+
+[yelmo_abollado]
+name = "Yelmo abollado"
+description = "Pesado y fiable."
+slot = "helmet"
+rarity = "common"
+min_level = 1
+flavor = "bruto"
+stats = { max_hp = 2 }
+
+[capucha_raida]
+name = "Capucha raída"
+description = "Vibra con una energía fría."
+slot = "helmet"
+rarity = "common"
+min_level = 1
+flavor = "arcano"
+stats = { inteligencia = 1, max_hp = 2 }
+
+[antifaz_de_cuero]
+name = "Antifaz de cuero"
+description = "Ligero y silencioso."
+slot = "helmet"
+rarity = "common"
+min_level = 1
+flavor = "sigilo"
+stats = { crit_chance = 0.3 }
+
+[yelmo_del_vigia]
+name = "Yelmo del vigía"
+description = "Pesado y fiable."
+slot = "helmet"
+rarity = "uncommon"
+min_level = 3
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, defense = 1, max_hp = 3 }
+
+[corona_de_espinas]
+name = "Corona de espinas"
+description = "Vibra con una energía fría."
+slot = "helmet"
+rarity = "uncommon"
+min_level = 3
+flavor = "arcano"
+stats = { inteligencia = 1, magic_power = 1, max_hp = 3 }
+
+[capucha_del_ladron]
+name = "Capucha del ladrón"
+description = "Ligero y silencioso."
+slot = "helmet"
+rarity = "uncommon"
+min_level = 3
+flavor = "sigilo"
+stats = { destreza = 1, crit_chance = 0.4, physical_power = 1, loot_bonus = 0.3 }
+
+[peto_remendado]
+name = "Peto remendado"
+description = "Pesado y fiable."
+slot = "armor"
+rarity = "common"
+min_level = 1
+flavor = "bruto"
+stats = { defense = 1, max_hp = 4 }
+
+[tunica_sucia]
+name = "Túnica sucia"
+description = "Vibra con una energía fría."
+slot = "armor"
+rarity = "common"
+min_level = 1
+flavor = "arcano"
+stats = { inteligencia = 1, max_hp = 4 }
+
+[jubon_de_cuero]
+name = "Jubón de cuero"
+description = "Ligero y silencioso."
+slot = "armor"
+rarity = "common"
+min_level = 1
+flavor = "sigilo"
+stats = { crit_chance = 0.3, max_hp = 2 }
+
+[cota_herrumbrosa]
+name = "Cota herrumbrosa"
+description = "Pesado y fiable."
+slot = "armor"
+rarity = "uncommon"
+min_level = 3
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, defense = 1, max_hp = 7 }
+
+[habito_del_ermitano]
+name = "Hábito del ermitaño"
+description = "Vibra con una energía fría."
+slot = "armor"
+rarity = "uncommon"
+min_level = 3
+flavor = "arcano"
+stats = { inteligencia = 1, magic_power = 1, max_hp = 7 }
+
+[chaleco_de_cazador]
+name = "Chaleco de cazador"
+description = "Ligero y silencioso."
+slot = "armor"
+rarity = "uncommon"
+min_level = 3
+flavor = "sigilo"
+stats = { destreza = 1, crit_chance = 0.4, physical_power = 1, loot_bonus = 0.3, max_hp = 3 }
+
+[guanteletes_viejos]
+name = "Guanteletes viejos"
+description = "Pesado y fiable."
+slot = "gloves"
+rarity = "common"
+min_level = 1
+flavor = "bruto"
+stats = { max_hp = 2 }
+
+[guantes_de_lana]
+name = "Guantes de lana"
+description = "Vibra con una energía fría."
+slot = "gloves"
+rarity = "common"
+min_level = 1
+flavor = "arcano"
+stats = { max_hp = 2 }
+
+[guantes_de_cuero]
+name = "Guantes de cuero"
+description = "Ligero y silencioso."
+slot = "gloves"
+rarity = "common"
+min_level = 1
+flavor = "sigilo"
+stats = { crit_chance = 0.5 }
+
+[manoplas_del_osario]
+name = "Manoplas del osario"
+description = "Pesado y fiable."
+slot = "gloves"
+rarity = "uncommon"
+min_level = 3
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, max_hp = 3, crit_chance = 0.3 }
+
+[guantes_de_ceniza]
+name = "Guantes de ceniza"
+description = "Vibra con una energía fría."
+slot = "gloves"
+rarity = "uncommon"
+min_level = 3
+flavor = "arcano"
+stats = { inteligencia = 1, magic_power = 1, max_hp = 3, crit_chance = 0.3 }
+
+[guantes_del_carterista]
+name = "Guantes del carterista"
+description = "Ligero y silencioso."
+slot = "gloves"
+rarity = "uncommon"
+min_level = 3
+flavor = "sigilo"
+stats = { destreza = 1, crit_chance = 0.8, loot_bonus = 0.3 }
+
+[botas_gastadas]
+name = "Botas gastadas"
+description = "Pesado y fiable."
+slot = "boots"
+rarity = "common"
+min_level = 1
+flavor = "bruto"
+stats = { max_hp = 2 }
+
+[sandalias_de_ceniza]
+name = "Sandalias de ceniza"
+description = "Vibra con una energía fría."
+slot = "boots"
+rarity = "common"
+min_level = 1
+flavor = "arcano"
+stats = { max_hp = 2 }
+
+[botas_silenciosas]
+name = "Botas silenciosas"
+description = "Ligero y silencioso."
+slot = "boots"
+rarity = "common"
+min_level = 1
+flavor = "sigilo"
+stats = { destreza = 1, loot_bonus = 0.4 }
+
+[botas_de_hierro]
+name = "Botas de hierro"
+description = "Pesado y fiable."
+slot = "boots"
+rarity = "uncommon"
+min_level = 3
+flavor = "bruto"
+stats = { fuerza = 1, max_hp = 3, loot_bonus = 0.3 }
+
+[botas_del_ermitano]
+name = "Botas del ermitaño"
+description = "Vibra con una energía fría."
+slot = "boots"
+rarity = "uncommon"
+min_level = 3
+flavor = "arcano"
+stats = { inteligencia = 1, magic_power = 1, max_hp = 3, loot_bonus = 0.3 }
+
+[botas_de_sombra]
+name = "Botas de sombra"
+description = "Ligero y silencioso."
+slot = "boots"
+rarity = "uncommon"
+min_level = 3
+flavor = "sigilo"
+stats = { destreza = 1, crit_chance = 0.4, loot_bonus = 0.6 }
+
+[amuleto_de_hueso]
+name = "Amuleto de hueso"
+description = "Pesado y fiable."
+slot = "amulet"
+rarity = "common"
+min_level = 1
+flavor = "bruto"
+stats = { max_hp = 1 }
+
+[talisman_de_ceniza]
+name = "Talismán de ceniza"
+description = "Vibra con una energía fría."
+slot = "amulet"
+rarity = "common"
+min_level = 1
+flavor = "arcano"
+stats = { max_hp = 1 }
+
+[colmillo_colgante]
+name = "Colmillo colgante"
+description = "Ligero y silencioso."
+slot = "amulet"
+rarity = "common"
+min_level = 1
+flavor = "sigilo"
+stats = { loot_bonus = 0.3 }
+
+[medallon_del_soldado]
+name = "Medallón del soldado"
+description = "Pesado y fiable."
+slot = "amulet"
+rarity = "uncommon"
+min_level = 3
+flavor = "bruto"
+stats = { max_hp = 2, loot_bonus = 0.3 }
+
+[talisman_lunar]
+name = "Talismán lunar"
+description = "Vibra con una energía fría."
+slot = "amulet"
+rarity = "uncommon"
+min_level = 3
+flavor = "arcano"
+stats = { inteligencia = 1, max_hp = 2, loot_bonus = 0.3 }
+
+[moneda_de_la_suerte]
+name = "Moneda de la suerte"
+description = "Ligero y silencioso."
+slot = "amulet"
+rarity = "uncommon"
+min_level = 3
+flavor = "sigilo"
+stats = { destreza = 1, suerte = 1, crit_chance = 0.3, loot_bonus = 0.6 }
+
+[espada_del_penitente]
+name = "Espada del Penitente"
+description = "Pesado y fiable."
+slot = "weapon"
+rarity = "rare"
+min_level = 6
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, defense = 1, max_hp = 7, physical_power = 2 }
+effects = [{ type = "crit_damage", value = 0.2 }]
+
+[cetro_de_la_marea_negra]
+name = "Cetro de la Marea Negra"
+description = "Vibra con una energía fría."
+slot = "weapon"
+rarity = "epic"
+min_level = 9
+flavor = "arcano"
+stats = { inteligencia = 3, vitalidad = 1, magic_power = 6, max_hp = 11 }
+effects = [{ type = "skill_power", value = 0.25 }]
+
+[colmillo_del_verdugo]
+name = "Colmillo del Verdugo"
+description = "Dicen que nunca se ha limpiado de sangre."
+slot = "weapon"
+rarity = "legendary"
+min_level = 12
+flavor = "sigilo"
+stats = { destreza = 3, suerte = 1, crit_chance = 1.9, physical_power = 8, loot_bonus = 1.4 }
+effects = [{ type = "crit_damage", value = 0.35 }, { type = "lifesteal", value = 0.06 }]
+
+[visera_del_centinela]
+name = "Visera del Centinela"
+description = "Pesado y fiable."
+slot = "helmet"
+rarity = "rare"
+min_level = 6
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, defense = 1, max_hp = 6 }
+effects = [{ type = "thorns", value = 0.15 }]
+
+[corona_del_rey_hueco]
+name = "Corona del Rey Hueco"
+description = "Vibra con una energía fría."
+slot = "helmet"
+rarity = "epic"
+min_level = 9
+flavor = "arcano"
+stats = { inteligencia = 2, vitalidad = 1, magic_power = 2, max_hp = 8, defense = 1 }
+effects = [{ type = "skill_haste", value = 1 }]
+
+[mascara_del_ultimo_aliento]
+name = "Máscara del Último Aliento"
+description = "Quien la porta se niega a morir."
+slot = "helmet"
+rarity = "legendary"
+min_level = 12
+flavor = "sigilo"
+stats = { destreza = 3, suerte = 1, crit_chance = 1.5, physical_power = 2, loot_bonus = 1.1, defense = 1 }
+effects = [{ type = "second_wind", value = 0.35 }, { type = "crit_damage", value = 0.2 }]
+
+[coraza_del_guardian]
+name = "Coraza del Guardián"
+description = "Pesado y fiable."
+slot = "armor"
+rarity = "rare"
+min_level = 6
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, defense = 1, max_hp = 11 }
+effects = [{ type = "thorns", value = 0.2 }]
+
+[manto_del_penitente]
+name = "Manto del Penitente"
+description = "Vibra con una energía fría."
+slot = "armor"
+rarity = "epic"
+min_level = 9
+flavor = "arcano"
+stats = { inteligencia = 2, vitalidad = 1, magic_power = 2, max_hp = 16, defense = 1 }
+effects = [{ type = "second_wind", value = 0.3 }]
+
+[armadura_del_caido]
+name = "Armadura del Caído"
+description = "Forjada con el hierro de mil derrotas."
+slot = "armor"
+rarity = "legendary"
+min_level = 12
+flavor = "bruto"
+stats = { fuerza = 2, vitalidad = 2, defense = 3, max_hp = 23 }
+effects = [{ type = "thorns", value = 0.25 }, { type = "second_wind", value = 0.35 }]
+
+[garras_de_hierro]
+name = "Garras de hierro"
+description = "Ligero y silencioso."
+slot = "gloves"
+rarity = "rare"
+min_level = 6
+flavor = "sigilo"
+stats = { destreza = 1, crit_chance = 1.2, physical_power = 1, loot_bonus = 0.5 }
+effects = [{ type = "armor_pen", value = 0.15 }]
+
+[manoplas_del_verdugo]
+name = "Manoplas del Verdugo"
+description = "Pesado y fiable."
+slot = "gloves"
+rarity = "epic"
+min_level = 9
+flavor = "bruto"
+stats = { fuerza = 2, vitalidad = 1, defense = 1, max_hp = 8, crit_chance = 0.8 }
+effects = [{ type = "crit_damage", value = 0.3 }]
+
+[dedos_de_la_parca]
+name = "Dedos de la Parca"
+description = "Se cierran sobre lo que más importa."
+slot = "gloves"
+rarity = "legendary"
+min_level = 12
+flavor = "arcano"
+stats = { inteligencia = 3, vitalidad = 1, magic_power = 2, max_hp = 11, crit_chance = 1.1 }
+effects = [{ type = "armor_pen", value = 0.25 }, { type = "elite_damage", value = 0.3 }]
+
+[botas_del_rastreador]
+name = "Botas del Rastreador"
+description = "Ligero y silencioso."
+slot = "boots"
+rarity = "rare"
+min_level = 6
+flavor = "sigilo"
+stats = { destreza = 2, crit_chance = 0.6, physical_power = 1, loot_bonus = 1.0 }
+effects = [{ type = "item_find", value = 0.2 }]
+
+[botas_del_sanguinario]
+name = "Botas del Sanguinario"
+description = "Pesado y fiable."
+slot = "boots"
+rarity = "epic"
+min_level = 9
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, defense = 1, max_hp = 8, destreza = 1, loot_bonus = 0.7 }
+effects = [{ type = "lifesteal", value = 0.08 }]
+
+[pasos_del_abismo]
+name = "Pasos del Abismo"
+description = "No dejan huellas, solo ecos."
+slot = "boots"
+rarity = "legendary"
+min_level = 12
+flavor = "arcano"
+stats = { inteligencia = 3, vitalidad = 1, magic_power = 2, max_hp = 11, destreza = 1, loot_bonus = 1.0 }
+effects = [{ type = "skill_haste", value = 1 }, { type = "item_find", value = 0.3 }]
+
+[ojo_del_cuervo]
+name = "Ojo del Cuervo"
+description = "Ligero y silencioso."
+slot = "amulet"
+rarity = "rare"
+min_level = 6
+flavor = "sigilo"
+stats = { destreza = 1, suerte = 1, crit_chance = 0.5, physical_power = 1, loot_bonus = 0.9 }
+effects = [{ type = "item_find", value = 0.25 }]
+
+[sello_del_caido]
+name = "Sello del Caído"
+description = "Pesado y fiable."
+slot = "amulet"
+rarity = "epic"
+min_level = 9
+flavor = "bruto"
+stats = { fuerza = 1, vitalidad = 1, defense = 1, max_hp = 6, suerte = 1, loot_bonus = 0.8 }
+effects = [{ type = "empower", value = 0.45, skill = "golpe_aplastante" }]
+
+[sello_de_la_marea]
+name = "Sello de la Marea"
+description = "Vibra con una energía fría."
+slot = "amulet"
+rarity = "epic"
+min_level = 9
+flavor = "arcano"
+stats = { inteligencia = 1, vitalidad = 1, magic_power = 1, max_hp = 6, suerte = 1, loot_bonus = 0.8 }
+effects = [{ type = "empower", value = 0.45, skill = "bola_de_sombra" }]
+
+[sello_del_cuchillo]
+name = "Sello del Cuchillo"
+description = "Ligero y silencioso."
+slot = "amulet"
+rarity = "epic"
+min_level = 9
+flavor = "sigilo"
+stats = { destreza = 1, suerte = 1, crit_chance = 0.7, physical_power = 1, loot_bonus = 1.3 }
+effects = [{ type = "empower", value = 0.45, skill = "punalada_trapera" }]
+
+[corazon_del_abismo]
+name = "Corazón del Abismo"
+description = "Late despacio, como algo que espera."
+slot = "amulet"
+rarity = "legendary"
+min_level = 12
+flavor = "arcano"
+stats = { inteligencia = 2, vitalidad = 1, magic_power = 2, max_hp = 8, suerte = 1, loot_bonus = 1.1 }
+effects = [{ type = "skill_power", value = 0.25 }, { type = "item_find", value = 0.25 }]

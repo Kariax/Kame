@@ -1,0 +1,149 @@
+# Habilidades de clase. Cada clase tiene 4 habilidades normales (se equipan 2) y 1 definitiva.
+# cooldown N: si se usa en el turno t, vuelve a estar disponible en el turno t+N.
+# damage_type: "basic" usa el tipo del ataque básico de la clase.
+# splash: (solo en mazmorras) fracción del daño que también reciben los demás enemigos.
+
+# ---------------- GUERRERO ----------------
+[golpe_aplastante]
+name = "Golpe aplastante"
+description = "Un mandoble brutal con todo el peso del cuerpo."
+class = "guerrero"
+cooldown = 3
+unlock_level = 1
+multiplier = 1.8
+
+[bastion_de_hierro]
+name = "Bastión de hierro"
+description = "Se planta y encaja los golpes: recibe mucho menos daño durante 2 ataques."
+class = "guerrero"
+cooldown = 5
+unlock_level = 1
+guard = 0.5
+guard_turns = 2
+
+[quebrantar]
+name = "Quebrantar"
+description = "Golpea las armas del enemigo: su daño baja un 25 % durante 3 turnos."
+class = "guerrero"
+cooldown = 4
+unlock_level = 6
+multiplier = 1.0
+weaken = 0.25
+weaken_turns = 3
+
+[sed_de_sangre]
+name = "Sed de sangre"
+description = "Un golpe salvaje que le devuelve parte de la vida."
+class = "guerrero"
+cooldown = 5
+unlock_level = 12
+multiplier = 1.4
+heal_pct = 0.12
+
+[furia_del_caido]
+name = "Furia del caído"
+description = "Definitiva. Un golpe devastador que deja aturdido al enemigo."
+class = "guerrero"
+ultimate = true
+cooldown = 8
+unlock_level = 8
+multiplier = 3.0
+stun_turns = 1
+
+# ---------------- MAGO ----------------
+[bola_de_sombra]
+name = "Bola de sombra"
+description = "Una esfera de oscuridad condensada."
+class = "mago"
+cooldown = 2
+unlock_level = 1
+multiplier = 1.6
+splash = 0.4
+
+[escarcha_cortante]
+name = "Escarcha cortante"
+description = "Hielo que paraliza: el enemigo pierde su siguiente turno."
+class = "mago"
+cooldown = 5
+unlock_level = 1
+multiplier = 1.0
+stun_turns = 1
+
+[maleficio]
+name = "Maleficio"
+description = "Expone sus debilidades: el enemigo recibe un 30 % más de daño durante 3 turnos."
+class = "mago"
+cooldown = 5
+unlock_level = 6
+vulnerable = 0.30
+vulnerable_turns = 3
+
+[fuego_maldito]
+name = "Fuego maldito"
+description = "Llamas que siguen ardiendo: daño inicial y veneno mágico durante 3 turnos."
+class = "mago"
+cooldown = 4
+unlock_level = 12
+multiplier = 1.0
+poison_pct = 0.4
+poison_turns = 3
+
+[tormenta_del_abismo]
+name = "Tormenta del abismo"
+description = "Definitiva. Rompe las defensas mágicas del enemigo (ignora el 40 % de su resistencia)."
+class = "mago"
+ultimate = true
+cooldown = 8
+unlock_level = 8
+multiplier = 3.4
+ignore_armor = 0.4
+splash = 0.6
+
+# ---------------- PÍCARO ----------------
+[punalada_trapera]
+name = "Puñalada trapera"
+description = "Un ataque rápido hacia donde más duele."
+class = "picaro"
+cooldown = 2
+unlock_level = 1
+multiplier = 1.7
+
+[veneno_lento]
+name = "Veneno lento"
+description = "Hoja envenenada: daño inicial y veneno durante 4 turnos."
+class = "picaro"
+cooldown = 4
+unlock_level = 1
+multiplier = 0.8
+poison_pct = 0.45
+poison_turns = 4
+
+[hendidura]
+name = "Hendidura"
+description = "Abre una brecha: el enemigo recibe un 25 % más de daño durante 3 turnos."
+class = "picaro"
+cooldown = 5
+unlock_level = 6
+multiplier = 0.6
+vulnerable = 0.25
+vulnerable_turns = 3
+
+[evasion]
+name = "Evasión"
+description = "Se desvanece entre las sombras: recibe mucho menos daño en el siguiente ataque."
+class = "picaro"
+cooldown = 4
+unlock_level = 12
+multiplier = 1.0
+guard = 0.7
+guard_turns = 1
+
+[danza_de_cuchillas]
+name = "Danza de cuchillas"
+description = "Definitiva. Una ráfaga de cortes que siempre es un golpe crítico."
+class = "picaro"
+ultimate = true
+cooldown = 8
+unlock_level = 8
+multiplier = 2.6
+always_crit = true

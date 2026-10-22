@@ -1,0 +1,100 @@
+# Mazmorras cooperativas. Cada sala (stage) es un combate por turnos; la última es un jefe con fases.
+
+[cripta_del_rey_hueco]
+name = "Cripta del Rey Hueco"
+description = "Bajo la cripta olvidada duerme el rey que ordenó su propio entierro. Sus siervos aún le guardan el trono."
+min_level = 6
+recommended_level = 8
+min_players = 2
+max_players = 6
+recruit_hours = 24        # tiempo para reunir al grupo antes de que la partida se cancele
+turn_hours = 12           # plazo por ronda; quien no actúe, defiende
+hero_rating_cap = 190     # tope de poder por héroe: los más fuertes se "sincronizan" a este nivel
+hero_rating_floor = 150   # por debajo de este poder medio, los enemigos se endurecen (hay que ir preparado)
+stage_heal = 0.4          # vida que se recupera entre salas
+revive_hp = 0.25          # los caídos se levantan con esta vida entre salas
+auto_after_missed = 2     # rondas seguidas sin actuar para pasar a modo automático
+absent_after_missed = 4   # rondas seguidas sin actuar para darte por ausente
+max_rounds = 40           # límite de rondas (si se supera, fracaso por agotamiento)
+
+[[cripta_del_rey_hueco.stages]]
+kind = "fight"
+name = "Sala de los Osarios"
+intro = "Huesos apilados hasta el techo. Algo se mueve entre ellos."
+xp = 450
+gold = 250
+enemies = [ { enemy = "esqueleto_osario", per_hero = 0.7 }, { enemy = "necrofago_ciego", per_hero = 0.7 } ]
+loot = [ { chance = 0.25, pool = "normal", quality = 1.0 } ]
+shared = { gold = 150, materials = { hueso_astillado = 6, ectoplasma = 4 } }
+
+[[cripta_del_rey_hueco.stages]]
+kind = "fight"
+name = "Cámara de los Susurros"
+intro = "Voces sin boca repiten vuestros nombres. Un capitán os corta el paso."
+xp = 650
+gold = 400
+enemies = [ { enemy = "susurrante", per_hero = 0.7 }, { enemy = "capitan_osario", per_hero = 0.34 } ]
+loot = [ { chance = 0.5, pool = "elite", quality = 1.0 } ]
+shared = { gold = 250, materials = { fragmento_oscuro = 4, ectoplasma = 4 } }
+
+[[cripta_del_rey_hueco.stages]]
+kind = "boss"
+name = "Trono del Rey Hueco"
+intro = "El rey se levanta del trono. No tiene ojos, pero os mira."
+xp = 1500
+gold = 900
+loot = [ { chance = 1.0, pool = "elite", quality = 1.5 }, { chance = 0.3, pool = "elite", quality = 2.0 } ]
+shared = { gold = 500, materials = { sello_del_sepulcro = 3, fragmento_oscuro = 6, hueso_astillado = 8 } }
+
+[cripta_del_rey_hueco.stages.boss]
+enemy = "rey_hueco"
+hp_rounds = 6
+
+[[cripta_del_rey_hueco.stages.boss.phases]]
+name = "El Rey se alza"
+intro = "El Rey Hueco empuña su cetro."
+until_hp = 0.66
+[[cripta_del_rey_hueco.stages.boss.phases.moves]]
+name = "Tajo"
+kind = "attack"
+power = 0.22
+[[cripta_del_rey_hueco.stages.boss.phases.moves]]
+name = "Golpe de cetro"
+kind = "heavy"
+power = 0.42
+every = 2
+
+[[cripta_del_rey_hueco.stages.boss.phases]]
+name = "Susurros del hueco"
+intro = "Los susurros se vuelven gritos y una coraza de huesos crece alrededor del rey."
+until_hp = 0.33
+[[cripta_del_rey_hueco.stages.boss.phases.moves]]
+name = "Tajo"
+kind = "attack"
+power = 0.20
+[[cripta_del_rey_hueco.stages.boss.phases.moves]]
+name = "Golpe de cetro"
+kind = "heavy"
+power = 0.42
+every = 3
+[[cripta_del_rey_hueco.stages.boss.phases.moves]]
+name = "Coraza de huesos"
+kind = "bone_shield"
+power = 0.30
+every = 4
+shield_rounds = 1.5
+
+[[cripta_del_rey_hueco.stages.boss.phases]]
+name = "Furia del hueco"
+intro = "El rey ya no se contiene: su lamento sacude toda la cripta."
+until_hp = 0.0
+[[cripta_del_rey_hueco.stages.boss.phases.moves]]
+name = "Lamento"
+kind = "aoe"
+power = 0.13
+[[cripta_del_rey_hueco.stages.boss.phases.moves]]
+name = "Golpe de cetro"
+kind = "heavy"
+power = 0.50
+every = 2
+targets = "half"
