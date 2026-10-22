@@ -3,33 +3,33 @@
 # ---- cripta ----
 [cripta_bruto]
 name = "Esqueleto Errante"
-hp = 111
-power = 25.9
+hp = 127
+power = 28.5
 damage_type = "physical"
-defense = 14.7
-resistance = 3.7
+defense = 16.2
+resistance = 4.1
 xp = 15
 gold = 6
 drops = [{ material = "hueso_astillado", chance = 0.25 }]
 
 [cripta_ligero]
 name = "Rata de Sepulcro"
-hp = 70
-power = 24.0
+hp = 81
+power = 27.6
 damage_type = "physical"
-defense = 5.6
-resistance = 5.6
+defense = 6.4
+resistance = 6.4
 xp = 10
 gold = 4
 drops = [{ material = "hueso_astillado", chance = 0.15 }]
 
 [cripta_espectro]
 name = "Sombra Hambrienta"
-hp = 89
-power = 27.6
+hp = 106
+power = 31.7
 damage_type = "magic"
-defense = 1.9
-resistance = 22.2
+defense = 2.2
+resistance = 25.9
 xp = 16
 gold = 6
 drops = [{ material = "ectoplasma", chance = 0.25 }]
@@ -37,11 +37,11 @@ drops = [{ material = "ectoplasma", chance = 0.25 }]
 # ---- catacumbas ----
 [catacumbas_bruto]
 name = "Guardián Osario"
-hp = 204
-power = 47.5
+hp = 235
+power = 54.4
 damage_type = "physical"
-defense = 27.1
-resistance = 6.8
+defense = 31.1
+resistance = 7.9
 xp = 35
 gold = 18
 drops = [{ material = "hueso_astillado", chance = 0.3 }]
@@ -49,22 +49,22 @@ drops = [{ material = "hueso_astillado", chance = 0.3 }]
 [catacumbas_bruto_elite]
 elite = true
 name = "Campeón Osario"
-hp = 309
-power = 72.2
+hp = 361
+power = 83.9
 damage_type = "physical"
-defense = 41.2
-resistance = 10.3
+defense = 47.5
+resistance = 12.0
 xp = 105
 gold = 54
 drops = [{ material = "ectoplasma", chance = 0.8 }]
 
 [catacumbas_ligero]
 name = "Necrófago Voraz"
-hp = 129
-power = 44.2
+hp = 152
+power = 51.6
 damage_type = "physical"
-defense = 10.1
-resistance = 10.1
+defense = 11.9
+resistance = 11.9
 xp = 24
 gold = 12
 drops = [{ material = "hueso_astillado", chance = 0.2 }]
@@ -72,22 +72,22 @@ drops = [{ material = "hueso_astillado", chance = 0.2 }]
 [catacumbas_ligero_elite]
 elite = true
 name = "Necrófago Alfa"
-hp = 196
-power = 67.1
+hp = 232
+power = 79.4
 damage_type = "physical"
-defense = 15.5
-resistance = 15.5
+defense = 18.3
+resistance = 18.3
 xp = 74
 gold = 36
 drops = [{ material = "ectoplasma", chance = 0.8 }]
 
 [catacumbas_espectro]
 name = "Espectro Lloroso"
-hp = 164
-power = 50.9
+hp = 193
+power = 59.3
 damage_type = "magic"
-defense = 3.4
-resistance = 40.7
+defense = 3.8
+resistance = 47.5
 xp = 38
 gold = 18
 drops = [{ material = "ectoplasma", chance = 0.3 }]
@@ -95,11 +95,11 @@ drops = [{ material = "ectoplasma", chance = 0.3 }]
 [catacumbas_espectro_elite]
 elite = true
 name = "Espectro de la Cripta Profunda"
-hp = 246
-power = 77.3
+hp = 286
+power = 89.7
 damage_type = "magic"
-defense = 5.2
-resistance = 62.0
+defense = 5.9
+resistance = 71.2
 xp = 116
 gold = 54
 drops = [{ material = "ectoplasma", chance = 0.8 }]
@@ -107,11 +107,11 @@ drops = [{ material = "ectoplasma", chance = 0.8 }]
 # ---- abismo ----
 [abismo_bruto]
 name = "Caballero Corrupto"
-hp = 229
-power = 53.5
+hp = 286
+power = 67.0
 damage_type = "physical"
-defense = 30.6
-resistance = 7.7
+defense = 38.3
+resistance = 9.6
 xp = 50
 gold = 26
 drops = [{ material = "fragmento_oscuro", chance = 0.25 }]
@@ -119,22 +119,22 @@ drops = [{ material = "fragmento_oscuro", chance = 0.25 }]
 [abismo_bruto_elite]
 elite = true
 name = "Caballero Condenado"
-hp = 365
-power = 85.1
+hp = 456
+power = 106.4
 damage_type = "physical"
-defense = 48.7
-resistance = 12.1
+defense = 60.9
+resistance = 15.1
 xp = 150
 gold = 79
 drops = [{ material = "fragmento_oscuro", chance = 0.8 }]
 
 [abismo_ligero]
 name = "Sabueso del Abismo"
-hp = 145
-power = 49.6
+hp = 181
+power = 61.9
 damage_type = "physical"
-defense = 11.4
-resistance = 11.4
+defense = 14.2
+resistance = 14.2
 xp = 35
 gold = 18
 drops = [{ material = "fragmento_oscuro", chance = 0.2 }]
@@ -142,22 +142,22 @@ drops = [{ material = "fragmento_oscuro", chance = 0.2 }]
 [abismo_ligero_elite]
 elite = true
 name = "Sabueso Infernal"
-hp = 231
-power = 79.0
+hp = 289
+power = 98.8
 damage_type = "physical"
-defense = 18.3
-resistance = 18.3
+defense = 22.9
+resistance = 22.9
 xp = 105
 gold = 53
 drops = [{ material = "fragmento_oscuro", chance = 0.8 }]
 
 [abismo_espectro]
 name = "Heraldo Susurrante"
-hp = 184
-power = 57.2
+hp = 229
+power = 71.5
 damage_type = "magic"
-defense = 3.8
-resistance = 45.8
+defense = 4.6
+resistance = 56.8
 xp = 55
 gold = 26
 drops = [{ material = "fragmento_oscuro", chance = 0.3 }]
@@ -165,11 +165,11 @@ drops = [{ material = "fragmento_oscuro", chance = 0.3 }]
 [abismo_espectro_elite]
 elite = true
 name = "Heraldo Ascendido"
-hp = 291
-power = 91.1
+hp = 358
+power = 113.9
 damage_type = "magic"
-defense = 6.1
-resistance = 73.0
+defense = 7.5
+resistance = 91.3
 xp = 165
 gold = 79
 drops = [{ material = "fragmento_oscuro", chance = 0.8 }]
@@ -177,11 +177,11 @@ drops = [{ material = "fragmento_oscuro", chance = 0.8 }]
 # ---- paramo ----
 [paramo_bruto]
 name = "Gólem de Ceniza"
-hp = 412
-power = 96.0
+hp = 515
+power = 120.0
 damage_type = "physical"
-defense = 54.9
-resistance = 13.8
+defense = 68.6
+resistance = 17.2
 xp = 100
 gold = 54
 drops = [{ material = "ceniza_maldita", chance = 0.3 }]
@@ -189,22 +189,22 @@ drops = [{ material = "ceniza_maldita", chance = 0.3 }]
 [paramo_bruto_elite]
 elite = true
 name = "Gólem Ígneo"
-hp = 593
-power = 138.4
+hp = 740
+power = 173.0
 damage_type = "physical"
-defense = 79.1
-resistance = 19.7
+defense = 98.8
+resistance = 24.6
 xp = 300
 gold = 162
 drops = [{ material = "ceniza_maldita", chance = 0.8 }]
 
 [paramo_ligero]
 name = "Carroñero Alado"
-hp = 260
-power = 89.2
+hp = 318
+power = 111.5
 damage_type = "physical"
-defense = 20.5
-resistance = 20.5
+defense = 25.6
+resistance = 25.6
 xp = 70
 gold = 36
 drops = [{ material = "ceniza_maldita", chance = 0.2 }]
@@ -212,22 +212,22 @@ drops = [{ material = "ceniza_maldita", chance = 0.2 }]
 [paramo_ligero_elite]
 elite = true
 name = "Carroñero Gigante"
-hp = 376
-power = 128.6
+hp = 472
+power = 161.0
 damage_type = "physical"
-defense = 29.7
-resistance = 29.7
+defense = 36.8
+resistance = 36.8
 xp = 210
 gold = 108
 drops = [{ material = "ceniza_maldita", chance = 0.8 }]
 
 [paramo_espectro]
 name = "Banshee Ardiente"
-hp = 328
-power = 102.9
+hp = 410
+power = 128.5
 damage_type = "magic"
-defense = 6.8
-resistance = 82.3
+defense = 8.5
+resistance = 102.9
 xp = 110
 gold = 54
 drops = [{ material = "ceniza_maldita", chance = 0.3 }]
@@ -235,11 +235,11 @@ drops = [{ material = "ceniza_maldita", chance = 0.3 }]
 [paramo_espectro_elite]
 elite = true
 name = "Banshee Eterna"
-hp = 476
-power = 148.4
+hp = 595
+power = 185.5
 damage_type = "magic"
-defense = 9.9
-resistance = 118.7
+defense = 12.4
+resistance = 148.4
 xp = 330
 gold = 162
 drops = [{ material = "ceniza_maldita", chance = 0.8 }]
