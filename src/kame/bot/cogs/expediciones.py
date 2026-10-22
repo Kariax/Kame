@@ -10,6 +10,7 @@ from kame.bot.embeds import (
     claim_embed,
     expedition_list_embed,
     preview_expedition_embed,
+    combat_log_embed,
 )
 from kame.services import characters, expeditions
 
@@ -57,6 +58,23 @@ class ExpedicionesCog(commands.Cog):
             for e in self.bot.content.expeditions.values()
             if current in e.name.lower() or current in e.id
         ][:25]
+
+    @app_commands.command(name="combate", description="Ver el último combate resuelto de tu expedición activa")
+    async def combate(self, interaction: discord.Interaction):
+        conn, content = self.bot.conn, self.bot.content
+        active = expeditions.get_active_expedition(conn, content, interaction.user.id)
+        if active is None:
+            await interaction.response.send_message("No tienes ninguna expedición en curso.", ephemeral=True)
+            return
+        if not active.last_combat_log:
+            await interaction.response.send_message(
+                "Aún no se ha resuelto ningún combate en esta expedición. "
+                "Los combates se resuelven al usar `/reclamar`.",
+                ephemeral=True
+            )
+            return
+        embed = combat_log_embed(active)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="reclamar", description="Recoge los resultados de tu expedición")
     @app_commands.describe(preview="Simular el resultado sin reclamar (solo lectura)")

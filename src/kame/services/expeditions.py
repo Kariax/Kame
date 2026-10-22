@@ -19,6 +19,7 @@ from dataclasses import dataclass
 from kame.content import Content
 from kame.db.database import transaction
 from kame.engine.build import build_combatant, build_stats
+from kame.engine.combat import CombatLogEntry
 from kame.engine.expeditions import (
     ExpeditionDef,
     ExpeditionOutcome,
@@ -57,6 +58,15 @@ class ActiveExpedition:
     max_encounters: int
     seconds_to_next: int | None  # None = límite de acumulación alcanzado
     seconds_to_full: int
+    # Datos del último combate resuelto (si hay alguno)
+    last_combat_log: tuple[CombatLogEntry, ...] = ()
+    last_enemy_id: str = ""
+    last_enemy_name: str = ""
+    last_enemy_hp: int = 0
+    last_enemy_max_hp: int = 0
+    last_player_hp: int = 0
+    last_player_max_hp: int = 0
+    last_player_won: bool = True
 
 
 @dataclass(frozen=True)
@@ -124,8 +134,9 @@ def get_active_expedition(
     now = _now() if now is None else int(now)
     character = get_character(conn, discord_id)
     row = conn.execute(
-        "SELECT id, expedition_id, started_at FROM expeditions"
-        " WHERE character_id = ? AND claimed_at IS NULL",
+        "SELECT id, expedition_id, started_at, last_combat_log, last_enemy_id, last_enemy_name, "
+        "last_enemy_hp, last_enemy_max_hp, last_player_hp, last_player_max_hp, last_player_won "
+        "FROM expeditions WHERE character_id = ? AND claimed_at IS NULL",
         (character.id,),
     ).fetchone()
     if row is None:
@@ -134,6 +145,14 @@ def get_active_expedition(
     rules = content.config.expeditions
     elapsed = max(0, now - row["started_at"])
     cap_seconds = int(rules.max_accumulation_hours * 3600)
+
+    # Cargar log del último combate si existe
+    last_combat_log = ()
+    if row["last_combat_log"]:
+        import json
+        log_data = json.loads(row["last_combat_log"])
+        last_combat_log = tuple(CombatLogEntry(**entry) for entry in log_data)
+
     return ActiveExpedition(
         id=row["id"],
         definition=definition,
@@ -143,6 +162,14 @@ def get_active_expedition(
         max_encounters=encounters_available(cap_seconds, definition, rules),
         seconds_to_next=seconds_until_next_encounter(elapsed, definition, rules),
         seconds_to_full=max(0, cap_seconds - elapsed),
+        last_combat_log=last_combat_log,
+        last_enemy_id=row["last_enemy_id"] or "",
+        last_enemy_name=row["last_enemy_name"] or "",
+        last_enemy_hp=row["last_enemy_hp"] or 0,
+        last_enemy_max_hp=row["last_enemy_max_hp"] or 0,
+        last_player_hp=row["last_player_hp"] or 0,
+        last_player_max_hp=row["last_player_max_hp"] or 0,
+        last_player_won=bool(row["last_player_won"]),
     )
 
 
@@ -189,9 +216,19 @@ def claim_expedition(
         total_gold = outcome.gold + bonus_gold + added.overflow_gold
 
         # Cierre atómico: si otra reclamación ya lo cerró, rowcount será 0 y no se paga nada.
+        # Guardamos también el log del último combate
+        log_data = [entry.__dict__ for entry in outcome.last_combat_log] if outcome.last_combat_log else []
         closed = conn.execute(
-            "UPDATE expeditions SET claimed_at = ?, result = ? WHERE id = ? AND claimed_at IS NULL",
-            (now, json.dumps(_outcome_to_dict(outcome, added, bonus_xp, bonus_gold)), row["id"]),
+            "UPDATE expeditions SET claimed_at = ?, result = ?, "
+            "last_combat_log = ?, last_enemy_id = ?, last_enemy_name = ?, "
+            "last_enemy_hp = ?, last_enemy_max_hp = ?, "
+            "last_player_hp = ?, last_player_max_hp = ?, last_player_won = ? "
+            "WHERE id = ? AND claimed_at IS NULL",
+            (now, json.dumps(_outcome_to_dict(outcome, added, bonus_xp, bonus_gold)),
+             json.dumps(log_data), outcome.last_enemy_id, outcome.last_enemy_name,
+             outcome.last_enemy_hp, outcome.last_enemy_max_hp,
+             outcome.last_player_hp, outcome.last_player_max_hp,
+             1 if outcome.last_player_won else 0, row["id"]),
         )
         if closed.rowcount != 1:
             raise NoActiveExpedition()

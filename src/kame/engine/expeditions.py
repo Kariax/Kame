@@ -16,7 +16,7 @@ import math
 import random
 from dataclasses import dataclass, field
 
-from kame.engine.combat import Combatant, fight
+from kame.engine.combat import Combatant, CombatLogEntry, fight
 from kame.engine.items import ItemDrop, ItemRules, ItemTemplate, index_templates, roll_item
 
 
@@ -85,6 +85,14 @@ class ExpeditionOutcome:
     materials: dict[str, int] = field(default_factory=dict)
     kills: dict[str, int] = field(default_factory=dict)
     items: tuple[ItemDrop, ...] = ()
+    last_combat_log: tuple[CombatLogEntry, ...] = field(default=(), compare=False)
+    last_enemy_id: str = ""
+    last_enemy_name: str = ""
+    last_enemy_hp: int = 0
+    last_enemy_max_hp: int = 0
+    last_player_hp: int = 0
+    last_player_max_hp: int = 0
+    last_player_won: bool = True
 
 
 def encounters_available(
@@ -146,10 +154,31 @@ def resolve_expedition(
         )
     item_find = 1 + player.modifiers.item_find
 
+    last_combat_log: tuple[CombatLogEntry, ...] = ()
+    last_enemy_id = ""
+    last_enemy_name = ""
+    last_enemy_hp = 0
+    last_enemy_max_hp = 0
+    last_player_hp = 0
+    last_player_max_hp = 0
+    last_player_won = True
+
     for _ in range(encounters):
         enemy = enemies[rng.choices(ids, weights)[0]]
         attempted += 1
-        result = fight(player, enemy.to_combatant(), rng, rules.max_rounds)
+        enemy_combatant = enemy.to_combatant()
+        result = fight(player, enemy_combatant, rng, rules.max_rounds)
+
+        # Guardar info del último combate
+        last_combat_log = result.log
+        last_enemy_id = enemy.id
+        last_enemy_name = enemy.name
+        last_enemy_hp = result.enemy_hp_left
+        last_enemy_max_hp = enemy.hp
+        last_player_hp = result.player_hp_left
+        last_player_max_hp = player.max_hp
+        last_player_won = result.player_won
+
         if not result.player_won:
             retreated = True
             break
@@ -179,4 +208,12 @@ def resolve_expedition(
         materials=materials,
         kills=kills,
         items=tuple(items),
+        last_combat_log=last_combat_log,
+        last_enemy_id=last_enemy_id,
+        last_enemy_name=last_enemy_name,
+        last_enemy_hp=last_enemy_hp,
+        last_enemy_max_hp=last_enemy_max_hp,
+        last_player_hp=last_player_hp,
+        last_player_max_hp=last_player_max_hp,
+        last_player_won=last_player_won,
     )

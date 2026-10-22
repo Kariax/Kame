@@ -152,6 +152,86 @@ def active_expedition_embed(active) -> discord.Embed:
     return embed
 
 
+def combat_log_embed(active) -> discord.Embed:
+    """Embed para mostrar el último combate resuelto en /expedicion combate."""
+    exp = active.definition
+    log = active.last_combat_log
+
+    if not log:
+        return discord.Embed(
+            title=f"⚔️ {exp.name} — Sin combates resueltos",
+            description="Aún no se ha resuelto ningún combate.",
+            color=DARK_RED
+        )
+
+    # Determinar estado del último combate
+    won = active.last_player_won
+    title_emoji = "✅" if won else "❌"
+    title = f"{title_emoji} Combate resuelto: {active.last_enemy_name}"
+
+    # HP bars
+    enemy_hp_pct = active.last_enemy_hp / max(1, active.last_enemy_max_hp) if active.last_enemy_max_hp > 0 else 0
+    player_hp_pct = active.last_player_hp / max(1, active.last_player_max_hp) if active.last_player_max_hp > 0 else 0
+
+    enemy_bar = progress_bar(int(enemy_hp_pct * 10), 10, 10)
+    player_bar = progress_bar(int(player_hp_pct * 10), 10, 10)
+
+    embed = discord.Embed(title=title, color=DARK_RED)
+    embed.add_field(
+        name=f"👾 {active.last_enemy_name}",
+        value=f"{enemy_bar} {active.last_enemy_hp}/{active.last_enemy_max_hp} HP",
+        inline=True
+    )
+    embed.add_field(
+        name=f"⚔️ Tu personaje",
+        value=f"{player_bar} {active.last_player_hp}/{active.last_player_max_hp} HP",
+        inline=True
+    )
+    embed.add_field(name="​", value="​", inline=False)
+
+    # Construir el log de combate
+    lines = []
+    current_round = 0
+    for entry in log:
+        if entry.round != current_round:
+            current_round = entry.round
+            lines.append(f"**Ronda {current_round}**")
+
+        if entry.turn == "player":
+            if entry.action == "stunned":
+                lines.append(f"  😵 Tú estás aturdido")
+            elif entry.action == "basic_attack":
+                crit = " 💥" if entry.is_crit else ""
+                lines.append(f"  ⚔️ Ataque básico → **{entry.damage}**{crit}")
+            elif entry.is_heal:
+                lines.append(f"  💚 {entry.action.capitalize()} → **+{entry.heal_amount} HP**")
+            else:
+                # Skill o ultimate
+                emoji = "✨" if entry.action == "ultimate" else "🔮"
+                crit = " 💥" if entry.is_crit else ""
+                effect = f" ({entry.effect})" if entry.effect else ""
+                dmg_text = f" → **{entry.damage}**{crit}" if entry.damage > 0 else ""
+                lines.append(f"  {emoji} {entry.action}{dmg_text}{effect}")
+        else:  # enemy
+            if entry.action == "stunned":
+                lines.append(f"  😵 {active.last_enemy_name} está aturdido")
+            elif entry.action == "basic_attack":
+                lines.append(f"  👾 {active.last_enemy_name} ataca → **{entry.damage}**")
+            elif entry.action == "poison_damage":
+                lines.append(f"  💧 Veneno en {active.last_enemy_name} → **{entry.damage}**")
+            else:
+                lines.append(f"  👾 {active.last_enemy_name} → {entry.action}")
+
+    # Truncar si es muy largo
+    log_text = "\n".join(lines)
+    if len(log_text) > 1024:
+        log_text = log_text[:1020] + "..."
+
+    embed.add_field(name="📋 Desarrollo del combate", value=log_text or "Sin detalles", inline=False)
+    embed.set_footer(text=f"Encuentro #{active.encounters_ready} de {active.max_encounters} · Usa /reclamar para recoger recompensas")
+    return embed
+
+
 def claim_embed(character_name: str, result, content: Content) -> discord.Embed:
     o = result.outcome
     exp = result.definition

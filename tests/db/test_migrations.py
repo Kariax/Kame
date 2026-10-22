@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_migrations_apply_on_empty_db(tmp_path):
     conn = connect(tmp_path / "a.db")
-    assert migrate(conn, ROOT / "migrations") == [1, 2, 3, 4, 5, 6, 7]
+    assert migrate(conn, ROOT / "migrations") == [1, 2, 3, 4, 5, 6, 7, 8]
     tables = {r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     assert {"players", "characters", "activity_log", "schema_migrations", "expeditions",
             "character_materials", "item_instances", "equipment", "meta", "company", "company_storage",
@@ -22,7 +22,7 @@ def test_migrations_are_idempotent(tmp_path):
     conn = connect(tmp_path / "a.db")
     migrate(conn, ROOT / "migrations")
     assert migrate(conn, ROOT / "migrations") == []
-    assert conn.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 7
+    assert conn.execute("SELECT COUNT(*) FROM schema_migrations").fetchone()[0] == 8
 
 
 def test_failed_migration_rolls_back_completely(tmp_path):
@@ -158,7 +158,7 @@ def test_old_characters_get_defaults_after_migration_003(tmp_path):
         " destreza, suerte) VALUES (1, 'Vieja', 'mago', 1, 1, 1, 1, 1)"
     )
     # After adding migration 007 for activity_log partitioning, expect up to version 7
-    assert migrate(conn, mig) == [3, 4, 5, 6, 7]
+    assert migrate(conn, mig) == [3, 4, 5, 6, 7, 8]
     row = conn.execute("SELECT skill_1, skill_2, ultimate_mode FROM characters").fetchone()
     assert (row["skill_1"], row["skill_2"], row["ultimate_mode"]) == (None, None, "always")
 

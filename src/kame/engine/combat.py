@@ -46,11 +46,27 @@ class Combatant:
 
 
 @dataclass(frozen=True)
+class CombatLogEntry:
+    """Un solo evento durante un combate, para mostrar al jugador."""
+    round: int
+    turn: str  # "player" o "enemy"
+    action: str  # "basic_attack", nombre de skill, "ult", "defend", etc.
+    damage: int = 0
+    damage_type: str = "physical"
+    is_crit: bool = False
+    is_heal: bool = False
+    heal_amount: int = 0
+    effect: str | None = None  # aturdimiento, vulnerabilidad, etc.
+    target: str = ""  # nombre del objetivo
+
+
+@dataclass(frozen=True)
 class FightResult:
     player_won: bool
     rounds: int
     player_hp_left: int
     enemy_hp_left: int
+    log: tuple[CombatLogEntry, ...] = ()
 
 
 def player_combatant(
@@ -189,6 +205,11 @@ def _use_skill(skill: SkillDef, me: _Side, foe: _Side, rng: random.Random) -> in
 def fight(
     player: Combatant, enemy: Combatant, rng: random.Random, max_rounds: int = 30
 ) -> FightResult:
+    log: list[CombatLogEntry] = []
+
+    def _log_entry(**kwargs):
+        log.append(CombatLogEntry(round=round_number, **kwargs))
+
     me, foe = _Side(player), _Side(enemy)
     skills = list(player.skills) + ([player.ultimate] if player.ultimate else [])
     cooldowns = {s.id: 0 for s in skills}
@@ -201,43 +222,117 @@ def fight(
                 cooldowns[skill_id] -= 1
         if me.stun > 0:
             me.stun -= 1
+            _log_entry(turn="player", action="stunned", target=player.name)
         else:
             skill = _choose_skill(me, foe, cooldowns)
             if skill is not None:
                 dealt = _use_skill(skill, me, foe, rng)
                 cooldowns[skill.id] = max(1, skill.cooldown - mods.skill_haste)
+                action_name = "ultimate" if skill is player.ultimate else skill.name
+                _log_entry(
+                    turn="player",
+                    action=action_name,
+                    damage=dealt,
+                    damage_type=skill.damage_type if skill.damage_type != "basic" else player.damage_type,
+                    is_crit=skill.always_crit or (dealt > player.power * skill.multiplier * 1.2),
+                    target=enemy.name,
+                    effect=(
+                        "🛡️ Guardia" if skill.guard else
+                        "⚡ Aturdimiento" if skill.stun_turns else
+                        "💧 Veneno" if skill.poison_pct else
+                        "🔻 Vulnerable" if skill.vulnerable else
+                        "🔻 Debilidad" if skill.weaken else
+                        None
+                    ),
+                )
+                if skill.heal_pct:
+                    heal_amt = round(me.c.max_hp * skill.heal_pct)
+                    _log_entry(
+                        turn="player",
+                        action="heal",
+                        is_heal=True,
+                        heal_amount=heal_amt,
+                        target=player.name,
+                    )
             else:
                 dealt = _damage(me, foe, rng)
+                _log_entry(
+                    turn="player",
+                    action="basic_attack",
+                    damage=dealt,
+                    damage_type=player.damage_type,
+                    is_crit=dealt > player.power * 1.5,
+                    target=enemy.name,
+                )
                 foe.hp -= dealt
             if mods.lifesteal and dealt:
-                me.hp = min(player.max_hp, me.hp + round(dealt * mods.lifesteal))
+                heal_amt = round(dealt * mods.lifesteal)
+                me.hp = min(player.max_hp, me.hp + heal_amt)
+                _log_entry(
+                    turn="player",
+                    action="lifesteal",
+                    is_heal=True,
+                    heal_amount=heal_amt,
+                    target=player.name,
+                )
             if foe.hp <= 0:
-                return FightResult(True, round_number, me.hp, 0)
+                return FightResult(True, round_number, me.hp, 0, log=tuple(log))
 
         # ---------- turno del enemigo ----------
         if foe.poison_turns > 0:
             foe.hp -= foe.poison_dmg
+            _log_entry(
+                turn="enemy",
+                action="poison_damage",
+                damage=foe.poison_dmg,
+                is_crit=False,
+                target=enemy.name,
+            )
             foe.poison_turns -= 1
             if foe.hp <= 0:
-                return FightResult(True, round_number, me.hp, 0)
+                return FightResult(True, round_number, me.hp, 0, log=tuple(log))
         if foe.stun > 0:
             foe.stun -= 1
+            _log_entry(turn="enemy", action="stunned", target=enemy.name)
         else:
             hit = _damage(foe, me, rng)
+            _log_entry(
+                turn="enemy",
+                action="basic_attack",
+                damage=hit,
+                damage_type=enemy.damage_type,
+                is_crit=False,
+                target=player.name,
+            )
             me.hp -= hit
             if mods.thorns:
-                foe.hp -= max(1, round(hit * mods.thorns))
+                thorns_dmg = max(1, round(hit * mods.thorns))
+                foe.hp -= thorns_dmg
+                _log_entry(
+                    turn="player",
+                    action="thorns",
+                    damage=thorns_dmg,
+                    target=enemy.name,
+                )
                 if foe.hp <= 0 and me.hp > 0:
-                    return FightResult(True, round_number, me.hp, 0)
+                    return FightResult(True, round_number, me.hp, 0, log=tuple(log))
             if me.hp <= 0:
-                return FightResult(False, round_number, 0, foe.hp)
+                return FightResult(False, round_number, 0, foe.hp, log=tuple(log))
             if (
                 mods.second_wind
                 and not me.second_wind_used
                 and me.hp < SECOND_WIND_THRESHOLD * player.max_hp
             ):
                 me.second_wind_used = True
-                me.hp = min(player.max_hp, me.hp + round(player.max_hp * mods.second_wind))
+                heal_amt = round(player.max_hp * mods.second_wind)
+                me.hp = min(player.max_hp, me.hp + heal_amt)
+                _log_entry(
+                    turn="player",
+                    action="second_wind",
+                    is_heal=True,
+                    heal_amount=heal_amt,
+                    target=player.name,
+                )
         # fin de ronda: caducan los estados con duración
         if foe.weaken_turns > 0:
             foe.weaken_turns -= 1
@@ -246,4 +341,4 @@ def fight(
         if me.guard_turns > 0:
             me.guard_turns -= 1
 
-    return FightResult(False, max_rounds, me.hp, foe.hp)
+    return FightResult(False, max_rounds, me.hp, foe.hp, log=tuple(log))
