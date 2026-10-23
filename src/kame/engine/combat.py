@@ -62,11 +62,11 @@ class CombatLogEntry:
 
 @dataclass(frozen=True)
 class FightResult:
-    combat_log: tuple[CombatLogEntry, ...] = ()
     player_won: bool
     rounds: int
     player_hp_left: int
     enemy_hp_left: int
+    combat_log: tuple[CombatLogEntry, ...] = ()
     log: tuple[CombatLogEntry, ...] = ()
 
 
@@ -207,7 +207,6 @@ def fight(
     player: Combatant, enemy: Combatant, rng: random.Random, max_rounds: int = 30
 ) -> FightResult:
     log: list[CombatLogEntry] = []
-    combat_log: tuple[CombatLogEntry, ...] = tuple(log))
 
     def _log_entry(**kwargs):
         log.append(CombatLogEntry(round=round_number, **kwargs))

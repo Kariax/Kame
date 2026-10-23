@@ -87,6 +87,7 @@ class ExpeditionOutcome:
     kills: dict[str, int] = field(default_factory=dict)
     defeated_by: dict[str, int] = field(default_factory=dict)
     items: tuple[ItemDrop, ...] = ()
+    combat_log: tuple[CombatLogEntry, ...] = field(default=(), compare=False)
     last_combat_log: tuple[CombatLogEntry, ...] = field(default=(), compare=False)
     last_enemy_id: str = ""
     last_enemy_name: str = ""
@@ -219,6 +220,7 @@ def resolve_expedition(
         kills=kills,
         defeated_by=defeated_by,
         items=tuple(items),
+        combat_log=last_combat_log,
         last_combat_log=last_combat_log,
         last_enemy_id=last_enemy_id,
         last_enemy_name=last_enemy_name,

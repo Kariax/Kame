@@ -248,26 +248,14 @@ def claim_embed(character_name: str, result, content: Content) -> discord.Embed:
 
     embed = discord.Embed(title=title, description=description, color=DARK_RED)
 
-    # Obtener el log del último combate si existe
-    active_expedition = get_active_expedition(content, character_name)
-    combat_log_embed = combat_log_embed(active_expedition) if active_expedition else None
-
     # Añadir detalles del combate si hay log
-    if combat_log_embed:
-        embed.add_field(name="📋 Desarrollo del combate", value=combat_log_embed.fields[0].value, inline=False)
-    o = result.outcome
-    exp = result.definition
-    if o.retreated:
-        title = f"⚔️ {character_name} regresa herido de {exp.name}"
-        description = (
-            f"Ganó {o.victories} de {o.encounters} encounters. "
-            f"En los que cayó, el enemigo huyó y la expedición siguió adelante. "
-            "Conserva todo lo ganado hasta entonces."
+    if o.combat_log:
+        log_text = "\n".join(
+            f"R{entry.round} {entry.turn}: {entry.action} {entry.damage or ''} {'💥' if entry.is_crit else ''} {'💚' if entry.is_heal else ''}"
+            for entry in o.combat_log
         )
-    else:
-        title = f"🎉 {character_name} regresa de {exp.name}"
-        description = f"Superó los {o.victories} encuentros del viaje sin caer."
-    embed = discord.Embed(title=title, description=description, color=DARK_RED)
+        embed.add_field(name="📋 Desarrollo del combate", value=log_text, inline=False)
+
     xp_text = f"+{o.xp + result.bonus_xp}" + (f" (incl. +{result.bonus_xp} de la Armería)" if result.bonus_xp else "")
     gold_text = f"+{o.gold + result.bonus_gold}" + (f" (incl. +{result.bonus_gold} de la Armería)" if result.bonus_gold else "")
     embed.add_field(name="Experiencia", value=xp_text, inline=True)
@@ -324,28 +312,6 @@ def claim_embed(character_name: str, result, content: Content) -> discord.Embed:
 
 
 def preview_expedition_embed(character_name: str, result, content: Content) -> discord.Embed:
-    o = result.outcome
-    exp = result.definition
-    if o.retreated:
-        title = f"🔎 Preview – {character_name} regresa herido de {exp.name}"
-        description = (
-            f"Ganó {o.victories} de {o.encounters} encounters. "
-            f"En los que cayó, el enemigo huyó y la expedición siguió adelante. "
-            "Conserva todo lo ganado hasta entonces."
-        )
-    else:
-        title = f"🔎 Preview – {character_name} regresa de {exp.name}"
-        description = f"Superó los {o.victories} encuentros del viaje sin caer."
-
-    embed = discord.Embed(title=title, description=description, color=discord.Color.blue())
-
-    # Obtener el log del último combate si existe
-    active_expedition = get_active_expedition(content, character_name)
-    combat_log_embed = combat_log_embed(active_expedition) if active_expedition else None
-
-    # Añadir detalles del combate si hay log
-    if combat_log_embed:
-        embed.add_field(name="📋 Desarrollo del combate (simulado)", value=combat_log_embed.fields[0].value, inline=False)
     """Embed de previsualización de `/reclamar`.
 
     Muestra exactamente los mismos datos que `claim_embed` pero con un estilo
@@ -364,8 +330,17 @@ def preview_expedition_embed(character_name: str, result, content: Content) -> d
     else:
         title = f"🔎 Preview – {character_name} regresa de {exp.name}"
         description = f"Superó los {o.victories} encuentros del viaje sin caer."
+
     embed = discord.Embed(title=title, description=description, color=discord.Color.blue())
     embed.set_footer(text="Esta es una previsualización: no se ha reclamado nada. Usa /reclamar para cobrar.")
+
+    # Añadir detalles del combate si hay log
+    if o.combat_log:
+        log_text = "\n".join(
+            f"R{entry.round} {entry.turn}: {entry.action} {entry.damage or ''} {'💥' if entry.is_crit else ''} {'💚' if entry.is_heal else ''}"
+            for entry in o.combat_log
+        )
+        embed.add_field(name="📋 Desarrollo del combate (simulado)", value=log_text, inline=False)
 
     xp_text = f"+{o.xp + result.bonus_xp}" + (f" (incl. +{result.bonus_xp} de la Armería)" if result.bonus_xp else "")
     gold_text = f"+{o.gold + result.bonus_gold}" + (f" (incl. +{result.bonus_gold} de la Armería)" if result.bonus_gold else "")

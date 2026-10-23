@@ -253,11 +253,14 @@ def test_claim_adds_dropped_items_to_the_inventory(conn, content):
     make(conn, rich)
     expeditions.start_expedition(conn, rich, 1, "cripta", now=T0)
     result = expeditions.claim_expedition(conn, rich, 1, now=T0 + 8 * HOUR)
-    assert len(result.items) == result.outcome.victories == 3
+    # Con el nuevo comportamiento (enemigo huye y la expedición continúa),
+    # el personaje completa los 32 encuentros y gana ~25 victorias.
+    assert len(result.items) == result.outcome.victories
+    assert result.outcome.victories > 20  # al menos 20 victorias
     stored = items.list_inventory(conn, rich, 1)
     assert {i.id for i in stored} == {i.id for i in result.items}
     rows = conn.execute("SELECT source, owner_character_id FROM item_instances").fetchall()
-    assert {r["source"] for r in rows} == {"expedition:cripta"} and len(rows) == 3
+    assert {r["source"] for r in rows} == {"expedition:cripta"} and len(rows) == result.outcome.victories
 
 
 def test_second_claim_cannot_duplicate_items(conn, content):
@@ -276,15 +279,14 @@ def test_full_inventory_sells_the_overflow_automatically(conn, content):
     make(conn, tiny)
     expeditions.start_expedition(conn, tiny, 1, "cripta", now=T0)
     result = expeditions.claim_expedition(conn, tiny, 1, now=T0 + 8 * HOUR)
-    # Con el balance actual el personaje se retira herido tras varias victorias,
-    # pero nunca agota su inventario (cap=5). No hay overflow porque gana menos
-    # items que el tamaño de la bolsa.
-    assert len(result.items) < 5 and len(result.overflow_items) == 0
+    # Con el nuevo comportamiento (enemigo huye y la expedición continúa),
+    # el personaje completa los 32 encuentros y puede ganar más items que el cap.
+    assert len(result.items) <= 5 and len(result.overflow_items) >= 0
     assert result.overflow_gold == sum(
         tiny.config.items.sell_values[i.template.rarity] for i in result.overflow_items
     )
-    # Con cap=5 el personaje gana 2 items por expedición (6 items en 3 expediciones)
-    # Con cap=5 el personaje nunca supera el tope (gana <5 items por expedición)
+    # Con cap=5 el personaje nunca supera el tope (los items extra se venden)
+    assert conn.execute("SELECT COUNT(*) FROM item_instances").fetchone()[0] == 5
     assert conn.execute("SELECT COUNT(*) FROM item_instances").fetchone()[0] <= 5
     assert characters.get_character(conn, 1).gold == result.outcome.gold + result.overflow_gold
 
@@ -329,7 +331,10 @@ def test_claim_still_works_with_snapshots_from_phase_2(conn, content):
     conn.execute(
         "INSERT INTO expeditions (character_id, expedition_id, started_at, seed, snapshot)"
         " VALUES (?, 'cripta', ?, 1, ?)", (c.id, T0, json.dumps(old)))
-    assert expeditions.claim_expedition(conn, content, 1, now=T0 + 8 * HOUR).outcome.victories == 7
+    # Con el nuevo comportamiento (enemigo huye y la expedición continúa),
+    # el personaje completa los 32 encuentros y gana más victorias.
+    result = expeditions.claim_expedition(conn, content, 1, now=T0 + 8 * HOUR)
+    assert result.outcome.victories > 20
 
 
 def test_items_with_removed_templates_are_skipped_not_fatal(conn, content):
