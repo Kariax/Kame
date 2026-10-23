@@ -6,9 +6,10 @@ combates se resuelven en secuencia con una única semilla, el resultado de los
 primeros N encuentros es siempre el mismo: reclamar antes o después no permite
 "repetir tirada".
 
-Si el personaje es derrotado en un encuentro, se retira: conserva lo ganado hasta
-ese momento y pierde el tiempo restante. Eso hace que las expediciones arriesgadas
-solo compensen cuando el personaje es claramente más fuerte que ellas.
+Si el personaje es derrotado en un encuentro, el enemigo huye y la expedición
+continúa: el siguiente encuentro se enfrenta con las heridas del anterior (el
+personaje entra con la HP con la que terminó el combate). Al reclamar, además de
+los enemigos derrotados, se muestra cuántas veces cada enemigo te ha vencido.
 """
 from __future__ import annotations
 
@@ -84,6 +85,7 @@ class ExpeditionOutcome:
     gold: int
     materials: dict[str, int] = field(default_factory=dict)
     kills: dict[str, int] = field(default_factory=dict)
+    defeated_by: dict[str, int] = field(default_factory=dict)
     items: tuple[ItemDrop, ...] = ()
     last_combat_log: tuple[CombatLogEntry, ...] = field(default=(), compare=False)
     last_enemy_id: str = ""
@@ -143,9 +145,11 @@ def resolve_expedition(
     gold_total = 0.0
     victories = 0
     attempted = 0
+    defeated = 0
     retreated = False
     materials: dict[str, int] = {}
     kills: dict[str, int] = {}
+    defeated_by: dict[str, int] = {}
     items: list[ItemDrop] = []
     grouped = None
     if templates and item_rules:
@@ -163,6 +167,8 @@ def resolve_expedition(
     last_player_max_hp = 0
     last_player_won = True
 
+    # El personaje entra cada encuentro con su HP máxima: cuando cae, el enemigo
+    # huye y la expedición continúa con el siguiente enemigo (no carrying damage).
     for _ in range(encounters):
         enemy = enemies[rng.choices(ids, weights)[0]]
         attempted += 1
@@ -180,8 +186,12 @@ def resolve_expedition(
         last_player_won = result.player_won
 
         if not result.player_won:
+            # El enemigo huye; la expedición continúa. Solo se cuentan derrotas
+            # cuando el personaje sobrevive al encuentro.
+            defeated += 1
+            defeated_by[enemy.id] = defeated_by.get(enemy.id, 0) + 1
             retreated = True
-            break
+            continue
         victories += 1
         kills[enemy.id] = kills.get(enemy.id, 0) + 1
         xp_total += enemy.xp * factor
@@ -207,6 +217,7 @@ def resolve_expedition(
         gold=int(round(gold_total)),
         materials=materials,
         kills=kills,
+        defeated_by=defeated_by,
         items=tuple(items),
         last_combat_log=last_combat_log,
         last_enemy_id=last_enemy_id,

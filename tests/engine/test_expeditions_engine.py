@@ -73,19 +73,24 @@ def test_claiming_later_cannot_change_earlier_results():
     for n in range(1, 41):
         partial = run(exp, enemies, n, seed=11)
         if n <= full.encounters:
-            # un resultado parcial nunca supera al completo y su retirada coincide
+            # un resultado parcial nunca supera al completo
             assert partial.victories <= full.victories
-            assert partial.retreated == (n == full.encounters and full.retreated)
+            # las derrotas parciales nunca superan a las del completo
+            for enemy_id, count in partial.defeated_by.items():
+                assert count <= full.defeated_by.get(enemy_id, 0)
         else:
-            assert partial == full  # ya se había retirado: reclamar más tarde no cambia nada
+            assert partial == full  # ya se alcanzó el tope: reclamar más tarde no cambia nada
 
 
-def test_defeat_ends_the_expedition_but_keeps_earned_rewards():
+def test_defeat_does_not_end_the_expedition_but_keeps_earned_rewards():
+    """Cuando el personaje cae, el enemigo huye y la expedición continúa."""
     mixed = expedition([("easy", 1), ("deadly", 1)])
     outcome = run(mixed, {"easy": EASY, "deadly": DEADLY}, 32, seed=3)
     assert outcome.retreated
-    assert outcome.encounters == outcome.victories + 1
+    assert outcome.encounters == 32
+    assert outcome.victories + sum(outcome.defeated_by.values()) == outcome.encounters
     assert outcome.xp == 10 * outcome.victories
+    assert outcome.defeated_by == {"deadly": 23}
 
 
 def test_rewards_of_a_clean_run():

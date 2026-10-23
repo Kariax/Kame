@@ -236,14 +236,15 @@ def claim_embed(character_name: str, result, content: Content) -> discord.Embed:
     o = result.outcome
     exp = result.definition
     if o.retreated:
-        title = f"🎉 {character_name} se retiró herido de {exp.name}"
+        title = f"⚔️ {character_name} regresa herido de {exp.name}"
         description = (
-            f"Ganó {o.victories} de {o.encounters} combates antes de caer y tuvo que replegarse. "
+            f"Ganó {o.victories} de {o.encounters} encounters. "
+            f"En los que cayó, el enemigo huyó y la expedición siguió adelante. "
             "Conserva todo lo ganado hasta entonces."
         )
     else:
         title = f"🎉 {character_name} regresa de {exp.name}"
-        description = f"Superó los {o.victories} encuentros del viaje."
+        description = f"Superó los {o.victories} encuentros del viaje sin caer."
     embed = discord.Embed(title=title, description=description, color=DARK_RED)
     xp_text = f"+{o.xp + result.bonus_xp}" + (f" (incl. +{result.bonus_xp} de la Armería)" if result.bonus_xp else "")
     gold_text = f"+{o.gold + result.bonus_gold}" + (f" (incl. +{result.bonus_gold} de la Armería)" if result.bonus_gold else "")
@@ -262,6 +263,14 @@ def claim_embed(character_name: str, result, content: Content) -> discord.Embed:
             name="Enemigos derrotados",
             value="\n".join(
                 f"{content.enemies[e].name}: {n}" for e, n in sorted(o.kills.items())
+            ),
+            inline=False,
+        )
+    if o.defeated_by:
+        embed.add_field(
+            name="Vencido por",
+            value="\n".join(
+                f"{content.enemies[e].name}: {n}" for e, n in sorted(o.defeated_by.items())
             ),
             inline=False,
         )
@@ -302,14 +311,15 @@ def preview_expedition_embed(character_name: str, result, content: Content) -> d
     o = result.outcome
     exp = result.definition
     if o.retreated:
-        title = f"🔎 Preview – {character_name} se retiró herido de {exp.name}"
+        title = f"🔎 Preview – {character_name} regresa herido de {exp.name}"
         description = (
-            f"Ganó {o.victories} de {o.encounters} combates antes de caer y tuvo que replegarse. "
-            "Conserva todo lo ganado hasta ese momento."
+            f"Ganó {o.victories} de {o.encounters} encounters. "
+            f"En los que cayó, el enemigo huyó y la expedición siguió adelante. "
+            "Conserva todo lo ganado hasta entonces."
         )
     else:
         title = f"🔎 Preview – {character_name} regresa de {exp.name}"
-        description = f"Superó los {o.victories} encuentros del viaje."
+        description = f"Superó los {o.victories} encuentros del viaje sin caer."
     embed = discord.Embed(title=title, description=description, color=discord.Color.blue())
     embed.set_footer(text="Esta es una previsualización: no se ha reclamado nada. Usa /reclamar para cobrar.")
 
@@ -330,6 +340,14 @@ def preview_expedition_embed(character_name: str, result, content: Content) -> d
             name="Enemigos derrotados",
             value="\n".join(
                 f"{content.enemies[e].name}: {n}" for e, n in sorted(o.kills.items())
+            ),
+            inline=False,
+        )
+    if o.defeated_by:
+        embed.add_field(
+            name="Vencido por",
+            value="\n".join(
+                f"{content.enemies[e].name}: {n}" for e, n in sorted(o.defeated_by.items())
             ),
             inline=False,
         )

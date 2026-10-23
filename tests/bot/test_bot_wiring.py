@@ -73,6 +73,9 @@ def test_expedition_embeds_render(conn, content):
     embed = claim_embed(c.name, result, content)
     assert embed.title and any(f.name == "Experiencia" for f in embed.fields)
     assert format_duration(3700) == "1 h 1 min" and format_duration(5) == "menos de 1 min"
+    # Si el personaje cayó durante la expedición, aparece la sección "Vencido por".
+    if result.outcome.defeated_by:
+        assert "Vencido por" in [f.name for f in embed.fields]
 
 
 def test_item_and_skill_embeds_render(conn, content):

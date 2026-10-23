@@ -218,21 +218,24 @@ def claim_expedition(
         # Cierre atómico: si otra reclamación ya lo cerró, rowcount será 0 y no se paga nada.
         # Guardamos también el log del último combate
         log_data = [entry.__dict__ for entry in outcome.last_combat_log] if outcome.last_combat_log else []
+        defeated_by_data = json.dumps(outcome.defeated_by) if outcome.defeated_by else None
         closed = conn.execute(
             "UPDATE expeditions SET claimed_at = ?, result = ?, "
             "last_combat_log = ?, last_enemy_id = ?, last_enemy_name = ?, "
             "last_enemy_hp = ?, last_enemy_max_hp = ?, "
-            "last_player_hp = ?, last_player_max_hp = ?, last_player_won = ? "
+            "last_player_hp = ?, last_player_max_hp = ?, last_player_won = ?, "
+            "defeated_by = ? "
             "WHERE id = ? AND claimed_at IS NULL",
             (now, json.dumps(_outcome_to_dict(outcome, added, bonus_xp, bonus_gold)),
              json.dumps(log_data), outcome.last_enemy_id, outcome.last_enemy_name,
              outcome.last_enemy_hp, outcome.last_enemy_max_hp,
              outcome.last_player_hp, outcome.last_player_max_hp,
-             1 if outcome.last_player_won else 0, row["id"]),
+             1 if outcome.last_player_won else 0, defeated_by_data, row["id"]),
         )
         if closed.rowcount != 1:
             raise NoActiveExpedition()
 
+        # Update XP based on the snapshot (which is frozen at expedition start)
         xp_result = grant_xp_tx(
             conn, content.config.progression, character.id, total_xp, f"expedition:{definition.id}"
         )
@@ -333,6 +336,7 @@ def _outcome_to_dict(outcome: ExpeditionOutcome, added=None, bonus_xp: int = 0, 
         "gold": outcome.gold,
         "materials": outcome.materials,
         "kills": outcome.kills,
+        "defeated_by": outcome.defeated_by,
         "items": items,
         "overflow_gold": added.overflow_gold if added is not None else 0,
         "bonus_xp": bonus_xp,
