@@ -80,6 +80,24 @@
 - **Comando `/estadisticas` totales personales**: implementado. Nuevo servicio `statistics.py` con estadísticas de expediciones ganadas/perdidas, mazmorras, oro, enemigos, objeto más raro.
 - **Cambio en expediciones (derrota = enemigo huye)**: implementado. El personaje ya no se retira al ser derrotado; el enemigo huye y la expedición continúa. Se registra cuántas veces has sido vencido por cada enemigo y se muestra en `/reclamar`.
 
+  ## Pruebas ejecutadas
+  - **481 pruebas automáticas pasan**: motor táctico (escalado con 2-6 jugadores, tope y mínimo de rating, defender, proteger, coraza del jefe, fases, caídos, serialización), equilibrio por tamaño y mezcla de clases, ausencias (defender -> auto -> ausente), recompensas una sola vez, participación, derrota parcial, abandonos, reinicio, prórroga por caída del bot, concurrencia (acciones, inicio y uniones simultáneas), almacén (donar, comprar, libro mayor coherente, compras simultáneas); tienda (oferta determinista por día, una compra por oferta y día, claves caducadas o basura, oro nunca negativo con compras simultáneas, sin arbitraje comprar-vender, mochila y tope real, reinicio de atributos con conservación de puntos); clasificación (cálculo, límites, actualización tras XP); migraciones; enlace del bot sin conexión; estadísticas personales (`/estadisticas`) y dashboard diario (`/diaria`); nuevo comportamiento de expediciones (enemigo huye en derrota).
+  
+  ## Equilibrio conocido (jugadores automáticos; los humanos que defiendan y protejan con cabeza rinden mejor)
+  - Grupos con Guerrero van mejor: gue+mag 94 %, gue+pic 87 %, 3 jugadores gue+mag+pic 98 %, mag+pic 60 %, mag+mag+pic+pic 82 %.
+    Sin Guerrero se puede ganar, pero cuesta más (el Guerrero aguanta y "quebrantar" ayuda). Si el grupo lo nota, revisar en el futuro.
+  - Si falta el Guerrero a mitad de partida (ausente), el grupo baja a ~47 %; si falta el Pícaro, ~92 %.
+  - Un héroe de nivel 30 apenas mejora las probabilidades del grupo (tope de rating).
+  - Los coeficientes se ajustan con scripts/simulate.py y scripts/simulate_dungeon.py.
+  
+  ## Pendiente
+  - Posibles ampliaciones futuras solo si el grupo las pide: más mazmorras/jefes, más clases, prestigio, eventos.
+  
+  ## Próximos pasos
+  1. Mantenimiento y posibles ajustes según feedback de los jugadores.
+  
+  Co-Authored-By: Claude Code <noreply@anthropic.com
+
 ## Pruebas ejecutadas
 - **481 pruebas automáticas pasan**: motor táctico (escalado con 2-6 jugadores, tope y mínimo de rating, defender, proteger, coraza del jefe, fases, caídos, serialización), equilibrio por tamaño y mezcla de clases, ausencias (defender -> auto -> ausente), recompensas una sola vez, participación, derrota parcial, abandonos, reinicio, prórroga por caída del bot, concurrencia (acciones, inicio y uniones simultáneas), almacén (donar, comprar, libro mayor coherente, compras simultáneas); tienda (oferta determinista por día, una compra por oferta y día, claves caducadas o basura, oro nunca negativo con compras simultáneas, sin arbitraje comprar-vender, mochila y tope real, reinicio de atributos con conservación de puntos); clasificación (cálculo, límites, actualización tras XP); migraciones; enlace del bot sin conexión; estadísticas personales (`/estadisticas`) y dashboard diario (`/diaria`); nuevo comportamiento de expediciones (enemigo huye en derrota).
 

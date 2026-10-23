@@ -62,6 +62,7 @@ class CombatLogEntry:
 
 @dataclass(frozen=True)
 class FightResult:
+    combat_log: tuple[CombatLogEntry, ...] = ()
     player_won: bool
     rounds: int
     player_hp_left: int
@@ -206,6 +207,7 @@ def fight(
     player: Combatant, enemy: Combatant, rng: random.Random, max_rounds: int = 30
 ) -> FightResult:
     log: list[CombatLogEntry] = []
+    combat_log: tuple[CombatLogEntry, ...] = tuple(log))
 
     def _log_entry(**kwargs):
         log.append(CombatLogEntry(round=round_number, **kwargs))
@@ -276,7 +278,7 @@ def fight(
                     target=player.name,
                 )
             if foe.hp <= 0:
-                return FightResult(True, round_number, me.hp, 0, log=tuple(log))
+                return FightResult(True, round_number, me.hp, 0, combat_log=tuple(log))
 
         # ---------- turno del enemigo ----------
         if foe.poison_turns > 0:
@@ -290,7 +292,7 @@ def fight(
             )
             foe.poison_turns -= 1
             if foe.hp <= 0:
-                return FightResult(True, round_number, me.hp, 0, log=tuple(log))
+                return FightResult(True, round_number, me.hp, 0, combat_log=tuple(log))
         if foe.stun > 0:
             foe.stun -= 1
             _log_entry(turn="enemy", action="stunned", target=enemy.name)
@@ -315,7 +317,7 @@ def fight(
                     target=enemy.name,
                 )
                 if foe.hp <= 0 and me.hp > 0:
-                    return FightResult(True, round_number, me.hp, 0, log=tuple(log))
+                    return FightResult(True, round_number, me.hp, 0, combat_log=tuple(log))
             if me.hp <= 0:
                 return FightResult(False, round_number, 0, foe.hp, log=tuple(log))
             if (
@@ -341,4 +343,4 @@ def fight(
         if me.guard_turns > 0:
             me.guard_turns -= 1
 
-    return FightResult(False, max_rounds, me.hp, foe.hp, log=tuple(log))
+    return FightResult(False, max_rounds, me.hp, foe.hp, combat_log=tuple(log))
