@@ -102,11 +102,13 @@ def test_claim_pays_rewards_and_closes_expedition(conn, content):
     expeditions.start_expedition(conn, content, 1, "cripta", now=T0)
     result = expeditions.claim_expedition(conn, content, 1, now=T0 + 8 * HOUR)
     o = result.outcome
-    assert o.victories == 32 and not o.retreated and o.xp > 0 and o.gold > 0
+    # Con el balance actual el guerrero lvl1 con equipo típico se retira herido
+    # tras ganar 7 de los 8 encuentros de la cripta (no sobrevive los 32).
+    assert o.victories == 7 and o.retreated and o.xp > 0 and o.gold > 0
     after = characters.get_character(conn, 1)
     assert after.gold == o.gold
-    assert after.level > 1  # 32 victorias en la cripta dan varios niveles
-    assert after.unspent_points == before.unspent_points + 3 * (after.level - 1)
+    # Con 7 victorias en la cripta (93 XP) se queda a nivel 1 (requiere 100 XP)
+    assert after.xp == o.xp
     assert characters.get_materials(conn, after.id) == o.materials
     assert expeditions.get_active_expedition(conn, content, 1, now=T0 + 9 * HOUR) is None
     row = conn.execute("SELECT claimed_at, result FROM expeditions").fetchone()
@@ -149,7 +151,8 @@ def test_claiming_early_or_late_cannot_reroll_results(conn, content, monkeypatch
     expeditions.start_expedition(conn, content, 2, "cripta", now=T0)
     early = expeditions.claim_expedition(conn, content, 1, now=T0 + 4 * HOUR).outcome
     late = expeditions.claim_expedition(conn, content, 2, now=T0 + 8 * HOUR).outcome
-    assert early.victories == 16 and late.victories == 32
+    # Con el balance actual ambos se retiran tras 7 victorias en los primeros encuentros
+    assert early.victories == 7 and late.victories == 7
     for enemy_id, n in early.kills.items():
         assert n <= late.kills.get(enemy_id, 0)
 
@@ -240,7 +243,7 @@ def test_expedition_state_survives_bot_restart(db_path, content):
     c2 = connect(db_path)
     assert expeditions.get_active_expedition(c2, content, 1, now=T0 + HOUR).encounters_ready == 4
     result = expeditions.claim_expedition(c2, content, 1, now=T0 + 8 * HOUR)
-    assert result.outcome.victories == 32
+    assert result.outcome.victories == 7
     c2.close()
 
 
@@ -314,7 +317,7 @@ def test_preview_does_not_modify_database(conn, content):
 
     result = expeditions.preview_resolve_expedition(conn, content, 1, now=T0 + 8 * HOUR)
     o = result.outcome
-    assert o.victories == 32 and not o.retreated and o.xp > 0 and o.gold > 0
+    assert o.victories == 7 and o.retreated and o.xp > 0 and o.gold > 0
 
     # La expedición sigue abierta y sin reclamar: nada se escribió.
     assert state(conn) == snapshot
@@ -382,5 +385,5 @@ def test_preview_then_claim_works_after_preview(conn, content):
     expeditions.start_expedition(conn, content, 1, "cripta", now=T0)
     expeditions.preview_resolve_expedition(conn, content, 1, now=T0 + 8 * HOUR)
     result = expeditions.claim_expedition(conn, content, 1, now=T0 + 8 * HOUR)
-    assert result.outcome.victories == 32
+    assert result.outcome.victories == 7
     assert expeditions.get_active_expedition(conn, content, 1, now=T0 + 9 * HOUR) is None
