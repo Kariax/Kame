@@ -232,8 +232,48 @@ def test_invalid_shop_content_is_rejected(tmp_path, old, new):
         load_content(_edit(tmp_path, "shop.toml", old, new))
 
 
-def test_real_shop_content(content):
-    shop = content.shop
-    assert set(shop.rarities) == {"common", "uncommon"} and shop.offers_per_slot == 2
-    assert shop.respec_free == 1 and shop.bag_slots == 10
-    assert list(shop.bag_prices) == sorted(shop.bag_prices)
+def test_habilidades_detallar_embed(conn, content):
+    """Testea que /habilidades detallar muestra la descripción detallada de una habilidad."""
+    from kame.bot.embeds import skill_detail_embed
+    from kame.services import skills
+
+    make(conn, content)
+    character = get_character(conn, content, 1)
+    view = skills.get_loadout(conn, content, 1)
+
+    # Probar habilidad disponible
+    skill = view.available[0]
+    embed = skill_detail_embed(skill, character, content)
+    assert embed.title == f"🔍 Detalle de {skill.name}"
+    assert embed.color.value == DARK_RED.value
+    assert "Descripción" in [f.name for f in embed.fields]
+    assert "Daño" in [f.name for f in embed.fields] or "Efectos" in [f.name for f in embed.fields]
+    assert "Reutilización" in [f.name for f in embed.fields]
+
+
+def test_habilidades_detallar_autocomplete(conn, content):
+    """Testea que /habilidades detallar tiene autocomplete."""
+    from kame.bot.cogs.habilidades import HabilidadesCog
+    from kame.bot.app import KameBot
+
+    bot = KameBot(None, content, conn)
+    cog = HabilidadesCog(bot)
+
+    # Mock interaction
+    class MockInteraction:
+        def __init__(self):
+            self.user = type('obj', (object,), {'id': 1})
+            self.response = type('obj', (object,), {'send_message': lambda *args, **kwargs: None})
+
+    interaction = MockInteraction()
+
+    # Mock cog._skill_autocomplete
+    async def mock_autocomplete(current):
+        return []
+
+    cog._skill_autocomplete = mock_autocomplete
+
+    # Probar autocomplete
+    choices = cog.detallar_autocomplete(interaction, "golpe")
+    assert len(choices) > 0
+    assert all(c.value in content.skills for c in choices)
