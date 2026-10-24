@@ -7,7 +7,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from kame.bot.embeds import loadout_embed
+from kame.bot.embeds import loadout_embed, skill_detail_embed
 from kame.content import Content
 from kame.engine.models import Character
 from kame.engine.skills import SkillDef
@@ -65,6 +65,22 @@ class HabilidadesCog(commands.Cog):
             )
         await interaction.response.send_message(embed=loadout_embed(view, content), ephemeral=True)
 
+    @app_commands.command(
+        name="detallar", description="Muestra la descripción detallada de una habilidad"
+    )
+    @app_commands.describe(habilidad="Habilidad que quieres ver en detalle")
+    async def detallar(self, interaction: discord.Interaction, habilidad: str):
+        conn, content = self.bot.conn, self.bot.content
+        view = skills.get_loadout(conn, content, interaction.user.id)
+        skill = content.skills.get(habilidad)
+        if skill is None:
+            await interaction.response.send_message(
+                f"❌ No encontré la habilidad `{habilidad}`.", ephemeral=True
+            )
+            return
+        embed = skill_detail_embed(skill, view.character, content)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
     async def _skill_autocomplete(self, interaction: discord.Interaction, current: str):
         try:
             view = skills.get_loadout(self.bot.conn, self.bot.content, interaction.user.id)
@@ -91,9 +107,8 @@ class HabilidadesCog(commands.Cog):
     @habilidades.autocomplete("definitiva")
     async def definitiva_autocomplete(self, interaction: discord.Interaction, current: str):
         """Autocomplete for the 'definitiva' parameter with descriptive choices."""
-        # The `current` argument can be used to filter options, but we return all descriptive choices.
         choices = [
-            app_commands.Choice(name="Siempre que esté lista ⚔️", value="siempre"),
+            app_commands.Choice(name="Siempre que esté ready ⚔️", value="siempre"),
             app_commands.Choice(name="Solo contra enemigos fuertes 💪", value="enemigo_fuerte"),
             app_commands.Choice(name="Solo con vida baja (< 50%) ❤️", value="vida_baja"),
             app_commands.Choice(name="Nunca 🛑", value="nunca"),
@@ -102,3 +117,17 @@ class HabilidadesCog(commands.Cog):
             return choices
         lower = current.lower()
         return [c for c in choices if lower in c.name.lower() or lower in c.value.lower()]
+
+    @detallar.autocomplete("habilidad")
+    async def detallar_autocomplete(self, interaction: discord.Interaction, current: str):
+        """Autocomplete for the 'habilidad' parameter of /habilidades detallar."""
+        try:
+            view = skills.get_loadout(self.bot.conn, self.bot.content, interaction.user.id)
+        except Exception:
+            return []
+        current = current.lower()
+        return [
+            app_commands.Choice(name=f"{s.name} (reutilización {s.cooldown}, mult: ×{s.multiplier:g})"[:100], value=s.id)
+            for s in view.available
+            if current in s.name.lower()
+        ][:25]

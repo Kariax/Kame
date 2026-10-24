@@ -36,7 +36,7 @@ def test_cog_registers_expected_commands(conn, content, tmp_path):
     assert asyncio.run(run()) == {
         "crear", "perfil", "atributos", "ayuda", "mecanicas", "expedicion", "reclamar",
         "inventario", "equipo", "equipar", "desequipar", "vender", "habilidades",
-        "compania", "mazmorra", "tienda", "combate",
+        "compania", "mazmorra", "tienda", "combate", "detallar",
     }
 
 
