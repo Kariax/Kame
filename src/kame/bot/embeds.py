@@ -15,7 +15,7 @@ from kame.engine.items import (
 )
 from kame.engine.models import ATTRIBUTES, Character
 from kame.engine.progression import xp_to_next_level
-from kame.engine.skills import ULTIMATE_MODE_LABELS
+from kame.engine.skills import ULTIMATE_MODE_LABELS, SkillDef
 from kame.engine.stats import derive_stats
 
 DARK_RED = discord.Color.from_rgb(139, 26, 26)
@@ -597,6 +597,79 @@ def loadout_embed(view, content: Content) -> discord.Embed:
             value="\n".join(f"{s.name} (nivel {s.unlock_level})" for s in view.locked), inline=False,
         )
     embed.set_footer(text="Configura con /habilidades habilidad1:… habilidad2:… definitiva:…")
+    return embed
+
+
+def skill_detail_embed(skill: SkillDef, character: Character, content: Content) -> discord.Embed:
+    """Embed con la descripción detallada de una habilidad.
+
+    Muestra la descripción, la fórmula de cálculo de daño, los efectos y la reutilización.
+    """
+    class_def = content.classes[character.class_id]
+    attack = class_def.basic_attack
+    is_physical = attack.damage_type == "physical"
+
+    # Calcular poder aproximado del personaje
+    from kame.engine.stats import derive_stats
+    stats = derive_stats(character.level, character.attributes)
+    power = stats.physical_power if is_physical else stats.magic_power
+
+    embed = discord.Embed(
+        title=f"🔍 Detalle de {skill.name}",
+        description=skill.description,
+        color=DARK_RED,
+    )
+
+    # --- Daño ---
+    if skill.multiplier > 0:
+        dmg_type = "físico" if skill.damage_type == "physical" else (
+            "mágico" if skill.damage_type == "magic" else "básico"
+        )
+        dmg_lines = [
+            f"**Fórmula**: `poder × multiplicador × variación(±20 %) × mitigación`",
+            f"• Poder base: **{power}** ({dmg_type})",
+            f"• Multiplicador de la habilidad: **×{skill.multiplier:g}**",
+            f"• Daño estimado (sin armadura): **~{int(power * skill.multiplier)}**",
+        ]
+        if skill.ignore_armor:
+            dmg_lines.append(f"• Ignora {skill.ignore_armor * 100:.0f} % de armadura")
+        if skill.always_crit:
+            dmg_lines.append("• **Siempre crítico**")
+        embed.add_field(name="⚔️ Daño", value="\n".join(dmg_lines), inline=False)
+    else:
+        embed.add_field(name="⚔️ Daño", value="Esta habilidad no causa daño directo.", inline=False)
+
+    # --- Efectos ---
+    effects = []
+    if skill.heal_pct:
+        effects.append(f"💚 Cura un **{skill.heal_pct * 100:.0f} %** de vida máxima")
+    if skill.guard:
+        effects.append(f"🛡️ Guardia: reduce el daño recibido un **{skill.guard * 100:.0f} %** durante {skill.guard_turns} ronda(s)")
+    if skill.stun_turns:
+        effects.append(f"⚡ Aturdimiento: el objetivo no actúa durante {skill.stun_turns} ronda(s)")
+    if skill.vulnerable:
+        effects.append(f"🔻 Vulnerabilidad: el objetivo recibe +{skill.vulnerable * 100:.0f} % de daño durante {skill.vulnerable_turns} ronda(s)")
+    if skill.weaken:
+        effects.append(f"🔻 Debilidad: el objetivo hace -{skill.weaken * 100:.0f} % de daño durante {skill.weaken_turns} ronda(s)")
+    if skill.poison_pct:
+        effects.append(f"💧 Veneno: cada ronda causa {skill.poison_pct * 100:.0f} % del poder de ataque, durante {skill.poison_turns} ronda(s)")
+    if skill.splash:
+        effects.append(f"💥 Splash: el {skill.splash * 100:.0f} % del daño afecta a los demás enemigos (mazmorras)")
+    if not effects:
+        effects.append("Sin efectos adicionales.")
+    embed.add_field(name="✨ Efectos", value="\n".join(effects), inline=False)
+
+    # --- Reutilización ---
+    embed.add_field(name="⏱️ Reutilización", value=f"**{skill.cooldown}** turnos", inline=True)
+
+    # --- Tipo ---
+    if skill.ultimate:
+        mode_label = ULTIMATE_MODE_LABELS.get("always", "siempre que esté lista")
+        embed.add_field(name="🌟 Modo de uso", value=f"Definitiva: se usa {mode_label}.", inline=True)
+    else:
+        embed.add_field(name="🌟 Tipo", value="Habilidad normal", inline=True)
+
+    embed.set_footer(text=f"Clase: {class_def.name} · Nivel de desbloqueo: {skill.unlock_level}")
     return embed
 
 

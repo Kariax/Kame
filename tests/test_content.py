@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from kame.bot.embeds import DARK_RED
 from kame.content import ContentError, load_content
 from kame.engine.models import ATTRIBUTES
 
@@ -235,10 +236,10 @@ def test_invalid_shop_content_is_rejected(tmp_path, old, new):
 def test_habilidades_detallar_embed(conn, content):
     """Testea que /habilidades detallar muestra la descripción detallada de una habilidad."""
     from kame.bot.embeds import skill_detail_embed
-    from kame.services import skills
+    from kame.services import characters, skills
 
-    make(conn, content)
-    character = get_character(conn, content, 1)
+    characters.create_character(conn, content, 1, "Aldric", "guerrero")
+    character = characters.get_character(conn, 1)
     view = skills.get_loadout(conn, content, 1)
 
     # Probar habilidad disponible
@@ -246,16 +247,20 @@ def test_habilidades_detallar_embed(conn, content):
     embed = skill_detail_embed(skill, character, content)
     assert embed.title == f"🔍 Detalle de {skill.name}"
     assert embed.color.value == DARK_RED.value
-    assert "Descripción" in [f.name for f in embed.fields]
-    assert "Daño" in [f.name for f in embed.fields] or "Efectos" in [f.name for f in embed.fields]
-    assert "Reutilización" in [f.name for f in embed.fields]
+    field_names = [f.name for f in embed.fields]
+    assert any("Daño" in n for n in field_names)
+    assert any("Efectos" in n for n in field_names)
+    assert any("Reutilización" in n for n in field_names)
 
 
 def test_habilidades_detallar_autocomplete(conn, content):
     """Testea que /habilidades detallar tiene autocomplete."""
     from kame.bot.cogs.habilidades import HabilidadesCog
     from kame.bot.app import KameBot
+    from kame.services import characters
+    import asyncio
 
+    characters.create_character(conn, content, 1, "Aldric", "guerrero")
     bot = KameBot(None, content, conn)
     cog = HabilidadesCog(bot)
 
@@ -267,13 +272,10 @@ def test_habilidades_detallar_autocomplete(conn, content):
 
     interaction = MockInteraction()
 
-    # Mock cog._skill_autocomplete
-    async def mock_autocomplete(current):
-        return []
-
-    cog._skill_autocomplete = mock_autocomplete
-
     # Probar autocomplete
-    choices = cog.detallar_autocomplete(interaction, "golpe")
-    assert len(choices) > 0
-    assert all(c.value in content.skills for c in choices)
+    async def run():
+        choices = await cog.detallar_autocomplete(interaction, "golpe")
+        assert len(choices) > 0
+        assert all(c.value in content.skills for c in choices)
+
+    asyncio.run(run())
