@@ -36,7 +36,7 @@ def test_cog_registers_expected_commands(conn, content, tmp_path):
     assert asyncio.run(run()) == {
         "crear", "perfil", "atributos", "ayuda", "mecanicas", "expedicion", "reclamar",
         "inventario", "equipo", "equipar", "desequipar", "vender", "habilidades",
-        "compania", "mazmorra", "tienda", "combate", "detallar",
+        "compania", "mazmorra", "tienda", "combate",
     }
 
 
@@ -159,6 +159,7 @@ def test_group_commands_expose_their_subcommands(conn, content, tmp_path):
 
     async def run():
         bot = KameBot(settings, content, conn)
+        await bot.add_cog(HabilidadesCog(bot))
         await bot.add_cog(CompaniaCog(bot))
         await bot.add_cog(MazmorraCog(bot))
         await bot.add_cog(TiendaCog(bot))
@@ -171,6 +172,7 @@ def test_group_commands_expose_their_subcommands(conn, content, tmp_path):
     assert groups["compania"] == {"ver", "donar", "mejorar"}
     assert groups["mazmorra"] == {"info", "crear", "unirse", "iniciar", "estado", "accion", "abandonar"}
     assert groups["tienda"] == {"ver", "comprar", "mochila", "reiniciar"}
+    assert groups["habilidades"] == {"ver", "detallar"}
 
 
 def test_action_names_cover_every_engine_action():

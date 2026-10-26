@@ -37,18 +37,20 @@ def _estimate_skill_damage(skill: SkillDef, character: Character, content: Conte
 
 
 class HabilidadesCog(commands.Cog):
+    habilidades = app_commands.Group(
+        name="habilidades", description="Mira o configura tus habilidades y tu definitiva"
+    )
+
     def __init__(self, bot):
         self.bot = bot
 
-    @app_commands.command(
-        name="habilidades", description="Mira o configura tus habilidades y tu definitiva"
-    )
+    @habilidades.command(name="ver", description="Mira o configura tus habilidades y tu definitiva")
     @app_commands.describe(
         habilidad1="Habilidad de prioridad 1",
         habilidad2="Habilidad de prioridad 2",
         definitiva="Cuándo usar la definitiva en combates automáticos",
     )
-    async def habilidades(
+    async def ver(
         self,
         interaction: discord.Interaction,
         habilidad1: str | None = None,
@@ -65,9 +67,7 @@ class HabilidadesCog(commands.Cog):
             )
         await interaction.response.send_message(embed=loadout_embed(view, content), ephemeral=True)
 
-    @app_commands.command(
-        name="detallar", description="Muestra la descripción detallada de una habilidad"
-    )
+    @habilidades.command(name="detallar", description="Muestra la descripción detallada de una habilidad")
     @app_commands.describe(habilidad="Habilidad que quieres ver en detalle")
     async def detallar(self, interaction: discord.Interaction, habilidad: str):
         conn, content = self.bot.conn, self.bot.content
@@ -96,15 +96,15 @@ class HabilidadesCog(commands.Cog):
             if current in s.name.lower()
         ][:25]
 
-    @habilidades.autocomplete("habilidad1")
+    @ver.autocomplete("habilidad1")
     async def habilidad1_autocomplete(self, interaction: discord.Interaction, current: str):
         return await self._skill_autocomplete(interaction, current)
 
-    @habilidades.autocomplete("habilidad2")
+    @ver.autocomplete("habilidad2")
     async def habilidad2_autocomplete(self, interaction: discord.Interaction, current: str):
         return await self._skill_autocomplete(interaction, current)
 
-    @habilidades.autocomplete("definitiva")
+    @ver.autocomplete("definitiva")
     async def definitiva_autocomplete(self, interaction: discord.Interaction, current: str):
         """Autocomplete for the 'definitiva' parameter with descriptive choices."""
         choices = [
