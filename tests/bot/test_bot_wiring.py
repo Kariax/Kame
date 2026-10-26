@@ -217,6 +217,13 @@ def test_bar_helper_is_bounded():
     assert bar(5, 0) in ("▰" * 10, "▱" * 10) and len(bar(999, 10)) == 10
 
 
+def test_help_text_lists_detallar_and_is_bounded():
+    from kame.bot.embeds import HELP_TEXT
+
+    assert "/habilidades detallar" in HELP_TEXT
+    assert len(HELP_TEXT) <= 2000
+
+
 def test_shop_embed_renders_every_state(conn, content):
     from kame.bot.embeds import shop_embed
     from kame.db.database import transaction

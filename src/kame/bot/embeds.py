@@ -406,6 +406,7 @@ HELP_TEXT = (
     "`/equipar` / `/desequipar` – cambia tu equipo.\n"
     "`/vender` – vende un objeto no equipado por oro.\n"
     "`/habilidades` – mira y configuras tus habilidades y cuándo usar la definitiva.\n"
+    "`/habilidades detallar` – muestra la descripción detallada de una habilidad (fórmula de daño, efectos, reutilización) con autocomplete.\n"
     "`/compania` – almacén compartido: `ver`, `donar` y `mejorar` la sede.\n"
     "`/tienda` – gasta tu oro: `ver`, `comprar` equipo del día, `mochila` y `reiniciar` atributos.\n"
     "`/mazmorra` – cooperativo: `info`, `crear`, `unirse`, `iniciar`, `estado`, `accion`, `abandonar`.\n"
